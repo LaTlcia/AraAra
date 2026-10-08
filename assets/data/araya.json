@@ -1,0 +1,92 @@
+{
+ "costumes": [
+  {
+   "id": 1042,
+   "name": "百合ヶ丘標準制服",
+   "nameZh": "百合丘标准制服",
+   "hairType": 1,
+   "jobspine": "jobspine/1042",
+   "chibi": "chibi/1042"
+  },
+  {
+   "id": 39042,
+   "name": "高難度外征レギオン制服",
+   "nameZh": "高难度外征军团制服",
+   "hairType": 1,
+   "jobspine": "jobspine/39042",
+   "chibi": "chibi/39042"
+  },
+  {
+   "id": 81042,
+   "name": "リリティカルサマー",
+   "nameZh": "莉莉缇卡夏日",
+   "hairType": 7,
+   "jobspine": "jobspine/81042",
+   "chibi": "chibi/81042"
+  },
+  {
+   "id": 82042,
+   "name": "セレスティアルサマー",
+   "nameZh": "天穹夏日",
+   "hairType": 1,
+   "jobspine": "jobspine/82042",
+   "chibi": "chibi/82042"
+  },
+  {
+   "id": 107042,
+   "name": "黄昏の聖装",
+   "nameZh": "黄昏圣装",
+   "hairType": 2,
+   "jobspine": "jobspine/107042",
+   "chibi": "chibi/107042"
+  },
+  {
+   "id": 117042,
+   "name": "ミラージュマリアージュ",
+   "nameZh": "幻影婚礼",
+   "hairType": 1,
+   "jobspine": "jobspine/117042",
+   "chibi": "chibi/117042"
+  },
+  {
+   "id": 172042,
+   "name": "マジェスティナイツ",
+   "nameZh": "威严骑士",
+   "hairType": 1,
+   "jobspine": "jobspine/172042",
+   "chibi": "chibi/172042"
+  },
+  {
+   "id": 173042,
+   "name": "モンスターハロウィン",
+   "nameZh": "怪物万圣节",
+   "hairType": 1,
+   "jobspine": "jobspine/173042",
+   "chibi": "chibi/173042"
+  },
+  {
+   "id": 347042,
+   "name": "パッションサマー",
+   "nameZh": "热情夏日",
+   "hairType": 2,
+   "jobspine": "jobspine/347042",
+   "chibi": "chibi/347042"
+  },
+  {
+   "id": 364042,
+   "name": "キモノサイレン",
+   "nameZh": "和服塞壬",
+   "hairType": 2,
+   "jobspine": "jobspine/364042",
+   "chibi": "chibi/364042"
+  },
+  {
+   "id": 377042,
+   "name": "ウェーブスタースタイル",
+   "nameZh": "浪花之星",
+   "hairType": 2,
+   "jobspine": "jobspine/377042",
+   "chibi": "chibi/377042"
+  }
+ ]
+}

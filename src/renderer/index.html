@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' pet:; script-src 'self' pet: 'unsafe-eval'; style-src 'self' pet: 'unsafe-inline'; img-src 'self' pet: data: blob:; connect-src 'self' pet:">
+<title>亚罗椰</title>
+<link rel="stylesheet" href="pet.css">
+<script src="../../node_modules/pixi.js/dist/browser/pixi.min.js"></script>
+<script src="../../node_modules/pixi-spine/dist/pixi-spine.umd.js"></script>
+</head>
+<body>
+  <div id="stage"></div>
+  <div id="manpu"></div>
+
+  <div id="bubble" class="bubble hit" hidden>
+    <div class="bubble-name">亚罗椰</div>
+    <div class="bubble-body"><span class="bubble-text"></span><span class="bubble-caret"></span></div>
+    <div class="bubble-dots"><i></i><i></i><i></i></div>
+  </div>
+
+  <div id="tools" class="tools hit">
+    <button data-act="chat" title="说话 (Ctrl/⌘+Shift+Y)"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.2 3.6c-.5.4-1.3.1-1.3-.6V16A2.5 2.5 0 0 1 4 13.5z"/></svg></button>
+    <button data-act="wardrobe" title="换衣服"><svg viewBox="0 0 24 24"><path d="M9 3.5c.4 1.4 1.6 2.3 3 2.3s2.6-.9 3-2.3l4.6 2.1c.5.2.7.8.5 1.3l-1.5 3.4c-.2.4-.7.6-1.1.5L16 10.3V20a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-9.7l-1.5.5c-.4.1-.9-.1-1.1-.5L3.9 6.9c-.2-.5 0-1.1.5-1.3z"/></svg></button>
+    <button data-act="menu" title="菜单"><svg viewBox="0 0 24 24"><circle cx="5.5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18.5" cy="12" r="2"/></svg></button>
+  </div>
+
+  <div id="wardrobe" class="wardrobe hit" hidden>
+    <div class="wardrobe-title">换衣服</div>
+    <div class="wardrobe-list"></div>
+  </div>
+
+  <form id="chatbar" class="chatbar hit" hidden autocomplete="off">
+    <input id="chat-input" type="text" maxlength="2000" placeholder="和亚罗椰说点什么…" spellcheck="false">
+    <button id="chat-close" type="button" class="ghost" title="收起 (Esc)">
+      <svg viewBox="0 0 24 24"><path d="M6.4 5 12 10.6 17.6 5 19 6.4 13.4 12 19 17.6 17.6 19 12 13.4 6.4 19 5 17.6 10.6 12 5 6.4z"/></svg>
+    </button>
+    <button id="chat-send" type="submit" title="发送 (Enter)">
+      <svg class="i-send" viewBox="0 0 24 24"><path d="M3.4 20.4 21 12 3.4 3.6l.1 6.5L15 12 3.5 13.9z"/></svg>
+      <svg class="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+    </button>
+  </form>
+
+  <script type="module" src="pet.js"></script>
+</body>
+</html>

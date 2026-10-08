@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Face Lab</title>
+<style>
+  body { margin: 0; background: #e9e4ea; font: 12px -apple-system, sans-serif; }
+  #stage { width: 1400px; height: 2600px; position: absolute; left: -9999px; }
+  #sheet { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px; }
+  figure { margin: 0; background: #fff; border-radius: 4px; padding: 2px; text-align: center; }
+  figure img { width: 190px; height: 150px; object-fit: cover; display: block; }
+  h3 { width: 100%; margin: 6px 0 0; }
+</style>
+<script src="../node_modules/pixi.js/dist/browser/pixi.min.js"></script>
+<script src="../node_modules/pixi-spine/dist/pixi-spine.umd.js"></script>
+</head>
+<body>
+<div id="stage"></div>
+<div id="sheet"></div>
+<script type="module">
+import { createApp, JobPet } from "../src/renderer/stage.js";
+import { JOB_SLOTS, JOB_FACES } from "../src/renderer/faces.js";
+
+const params = new URLSearchParams(location.search);
+const costumeId = params.get("c") || "1042";
+const mode = params.get("mode") || "parts";
+const app = createApp(document.getElementById("stage"));
+const pet = new JobPet(app);
+const data = await (await fetch("../assets/data/araya.json")).json();
+const costume = data.costumes.find((c) => String(c.id) === costumeId);
+await pet.load(costume, "../assets");
+pet.blink.next = 1e9;
+app.ticker.stop();
+pet.spine.autoUpdate = false;
+pet.spine.state.setAnimation(0, "01BaseLoop", true);
+pet.spine.update(0);
+
+const sheet = document.getElementById("sheet");
+function snap(label, overrides) {
+  pet.applyOverrides = function () {
+    const set = (slot, on) => this.setAttachment(slot, on ? slot : null);
+    overrides(set);
+  };
+  pet.spine.update(0);
+  app.renderer.render(app.stage);
+  const head = pet.headPoint();
+  const r = app.renderer.resolution;
+  const co = window.cropOverride || { w: 300, h: 230, dy: 10 };
+  const w = co.w, h = co.h;
+  const c = document.createElement("canvas");
+  c.width = w * 2; c.height = h * 2;
+  c.getContext("2d").drawImage(app.view, (head.x - w / 2) * r, (head.y - h / 2 + co.dy) * r, w * r, h * r, 0, 0, w * 2, h * 2);
+  const fig = document.createElement("figure");
+  fig.innerHTML = `<img src="${c.toDataURL()}"><figcaption>${label}</figcaption>`;
+  sheet.appendChild(fig);
+}
+const all = [...JOB_SLOTS.browR, ...JOB_SLOTS.browL, ...JOB_SLOTS.eyeR, ...JOB_SLOTS.eyeL, ...JOB_SLOTS.eyeOpenParts, ...JOB_SLOTS.kira, ...JOB_SLOTS.cheek, ...JOB_SLOTS.mouth];
+const base = { browR: "EyeBlowR_A", browL: "EyeBlowL_A", eyeR: "EyeLashesR_1", eyeL: "EyeLashesL_1", mouth: "Mouth01_A" };
+function withParts(parts, open = true) {
+  return (set) => {
+    all.forEach((s) => set(s, false));
+    Object.values(parts).forEach((s) => s && set(s, true));
+    if (open) JOB_SLOTS.eyeOpenParts.forEach((s) => set(s, true));
+  };
+}
+const h3 = (t) => { const e = document.createElement("h3"); e.textContent = t; sheet.appendChild(e); };
+
+if (mode === "brow") {
+  document.querySelectorAll("figure img").forEach(() => {});
+  const style = document.createElement("style");
+  style.textContent = "figure img { width: 380px !important; height: 160px !important; }";
+  document.head.appendChild(style);
+  window.cropOverride = { w: 200, h: 84, dy: -62 };
+  "ABCDE".split("").forEach((x) => snap(`brow ${x}`, withParts({ ...base, browR: `EyeBlowR_${x}`, browL: `EyeBlowL_${x}` })));
+  JOB_SLOTS.eyeR.forEach((s, i) => snap(`eye ${i + 1}`, withParts({ ...base, eyeR: s, eyeL: JOB_SLOTS.eyeL[i] }, i === 0)));
+} else if (mode === "parts") {
+  h3("眉毛");
+  "ABCDE".split("").forEach((x) => snap(`brow ${x}`, withParts({ ...base, browR: `EyeBlowR_${x}`, browL: `EyeBlowL_${x}` })));
+  h3("眼睛（1 带眼球）");
+  JOB_SLOTS.eyeR.forEach((s, i) => snap(`eye ${i + 1}`, withParts({ ...base, eyeR: s, eyeL: JOB_SLOTS.eyeL[i] }, i === 0)));
+  snap("kira", withParts({ ...base, k1: "EyeRight_Kira", k2: "EyeLeft_Kira" }));
+  snap("cheek", withParts({ ...base, ch: "FaceCheek" }));
+  h3("嘴 01/02/03 × A-H");
+  "ABCDEFGH".split("").forEach((x) => ["01", "02", "03"].forEach((o) => snap(`Mouth${o}_${x}`, withParts({ ...base, mouth: `Mouth${o}_${x}` }))));
+} else {
+  pet.applyOverrides = JobPet.prototype.applyOverrides;
+  for (const name of Object.keys(JOB_FACES)) {
+    pet.setFace(name);
+    pet.applyOverrides = JobPet.prototype.applyOverrides;
+    pet.spine.update(0);
+    app.renderer.render(app.stage);
+    const head = pet.headPoint();
+    const r = app.renderer.resolution;
+    const w = 300, h = 230;
+    const c = document.createElement("canvas");
+    c.width = w * 2; c.height = h * 2;
+    c.getContext("2d").drawImage(app.view, (head.x - w / 2) * r, (head.y - h / 2 + 10) * r, w * r, h * r, 0, 0, w * 2, h * 2);
+    const fig = document.createElement("figure");
+    fig.innerHTML = `<img src="${c.toDataURL()}"><figcaption>${name}</figcaption>`;
+    sheet.appendChild(fig);
+  }
+}
+document.title = "ready";
+</script>
+</body>
+</html>

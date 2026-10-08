@@ -1,0 +1,811 @@
+﻿
+CharacterJobSpine010377042.png
+size: 2048,2048
+format: RGBA4444
+filter: Linear,Linear
+repeat: none
+Mouth02_B
+  rotate: false
+  xy:1839,1438
+  size:45,34
+  orig:60,60
+  offset:7,15
+  index:-1
+HairBack01
+  rotate: false
+  xy:0,371
+  size:376,345
+  orig:376,345
+  offset:0,0
+  index:-1
+ArmLeftFore04
+  rotate: false
+  xy:784,894
+  size:194,298
+  orig:360,432
+  offset:56,93
+  index:-1
+HeadAcceLeft
+  rotate: false
+  xy:982,913
+  size:114,249
+  orig:114,249
+  offset:0,0
+  index:-1
+ArmRightHand02
+  rotate: false
+  xy:1689,1210
+  size:75,88
+  orig:180,180
+  offset:54,72
+  index:-1
+ArmRightFore04
+  rotate: false
+  xy:1518,1765
+  size:190,283
+  orig:360,432
+  offset:108,93
+  index:-1
+EyeLashesL_1
+  rotate: false
+  xy:809,555
+  size:100,80
+  orig:100,80
+  offset:0,0
+  index:-1
+Mouth02_F
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+ArmLeftHand02
+  rotate: false
+  xy:990,465
+  size:75,88
+  orig:180,180
+  offset:44,73
+  index:-1
+Mouth01_B
+  rotate: false
+  xy:926,1438
+  size:45,13
+  orig:60,60
+  offset:7,30
+  index:-1
+EyeBlowL_E
+  rotate: false
+  xy:1069,416
+  size:76,32
+  orig:110,60
+  offset:16,13
+  index:-1
+Mouth03_F
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+EyeLashesR_2
+  rotate: false
+  xy:274,287
+  size:100,80
+  orig:100,80
+  offset:0,0
+  index:-1
+EyeRight
+  rotate: false
+  xy:274,226
+  size:46,57
+  orig:54,63
+  offset:4,3
+  index:-1
+ArmLefttHand07B
+  rotate: false
+  xy:1448,984
+  size:117,149
+  orig:270,270
+  offset:67,91
+  index:-1
+ArmLeftFore
+  rotate: false
+  xy:982,1166
+  size:190,284
+  orig:360,432
+  offset:60,93
+  index:-1
+EyeBlowR_E
+  rotate: false
+  xy:990,373
+  size:77,32
+  orig:110,60
+  offset:13,13
+  index:-1
+ArmLefttHand07A
+  rotate: false
+  xy:0,97
+  size:270,270
+  orig:270,270
+  offset:0,0
+  index:-1
+ArmLeft
+  rotate: false
+  xy:1016,557
+  size:98,221
+  orig:204,288
+  offset:26,35
+  index:-1
+ArmRightHand04
+  rotate: false
+  xy:1224,655
+  size:91,133
+  orig:270,270
+  offset:101,106
+  index:-1
+Mouth02_G
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+EyeLashesL_Alpha_1
+  rotate: false
+  xy:1303,851
+  size:100,80
+  orig:100,80
+  offset:0,0
+  index:-1
+ArmLeftFore03
+  rotate: false
+  xy:1324,1764
+  size:190,284
+  orig:360,432
+  offset:60,93
+  index:-1
+EyeL_4
+  rotate: false
+  xy:1873,1554
+  size:80,31
+  orig:80,31
+  offset:0,0
+  index:-1
+EyeRightMask
+  rotate: false
+  xy:1830,1817
+  size:81,88
+  orig:81,88
+  offset:0,0
+  index:-1
+LegRightFoot
+  rotate: false
+  xy:1518,868
+  size:57,112
+  orig:180,180
+  offset:69,26
+  index:-1
+BustBack
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+ArmLeftHand01
+  rotate: false
+  xy:1630,1302
+  size:106,168
+  orig:270,270
+  offset:67,72
+  index:-1
+Mouth03_D
+  rotate: false
+  xy:1016,881
+  size:19,28
+  orig:60,60
+  offset:21,18
+  index:-1
+ArmRightFore03
+  rotate: false
+  xy:1176,1167
+  size:190,283
+  orig:360,432
+  offset:108,93
+  index:-1
+EyeBlowR_A
+  rotate: false
+  xy:908,346
+  size:77,28
+  orig:110,60
+  offset:13,18
+  index:-1
+EyeLashesR_Alpha_1
+  rotate: false
+  xy:1414,900
+  size:100,80
+  orig:100,80
+  offset:0,0
+  index:-1
+EyeLeftHi
+  rotate: false
+  xy:49,86
+  size:12,7
+  orig:12,7
+  offset:0,0
+  index:-1
+Mouth03_G
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+Mouth03_A
+  rotate: false
+  xy:1664,1031
+  size:45,34
+  orig:60,60
+  offset:7,11
+  index:-1
+Mouth02_C
+  rotate: false
+  xy:1445,873
+  size:35,23
+  orig:60,60
+  offset:12,21
+  index:-1
+EyeRightHi
+  rotate: false
+  xy:1630,1291
+  size:12,7
+  orig:12,7
+  offset:0,0
+  index:-1
+LegRightAcce
+  rotate: false
+  xy:1664,1069
+  size:64,54
+  orig:64,54
+  offset:0,0
+  index:-1
+ArmLeftFore02
+  rotate: false
+  xy:1126,1750
+  size:194,298
+  orig:360,432
+  offset:56,93
+  index:-1
+EyeR_3
+  rotate: false
+  xy:989,343
+  size:79,26
+  orig:79,26
+  offset:0,0
+  index:-1
+Mouth02_E
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+ArmRightFore
+  rotate: false
+  xy:1508,1477
+  size:190,283
+  orig:360,432
+  offset:108,93
+  index:-1
+Mouth03_E
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+LegLeftFoot
+  rotate: false
+  xy:1319,735
+  size:57,112
+  orig:180,180
+  offset:49,26
+  index:-1
+EyeBlowR_C
+  rotate: false
+  xy:1403,655
+  size:75,30
+  orig:110,60
+  offset:12,17
+  index:-1
+BodyAcceWest
+  rotate: false
+  xy:380,446
+  size:425,215
+  orig:425,215
+  offset:0,0
+  index:-1
+FaceCheek
+  rotate: false
+  xy:1794,1714
+  size:214,81
+  orig:214,81
+  offset:0,0
+  index:-1
+EyeLashesR_1
+  rotate: false
+  xy:1118,555
+  size:100,80
+  orig:100,80
+  offset:0,0
+  index:-1
+ArmLeftFore05
+  rotate: false
+  xy:1314,1462
+  size:190,284
+  orig:360,432
+  offset:60,93
+  index:-1
+Mouth01_D
+  rotate: false
+  xy:1271,602
+  size:19,13
+  orig:60,60
+  offset:20,27
+  index:-1
+Mouth02_H
+  rotate: false
+  xy:1740,1311
+  size:45,34
+  orig:60,60
+  offset:7,15
+  index:-1
+Mouth02_A
+  rotate: false
+  xy:1071,391
+  size:45,21
+  orig:60,60
+  offset:7,20
+  index:-1
+ArmRightHand05
+  rotate: false
+  xy:1178,792
+  size:121,139
+  orig:270,270
+  offset:81,100
+  index:-1
+HairAcceRight
+  rotate: false
+  xy:1794,1589
+  size:118,121
+  orig:118,121
+  offset:0,0
+  index:-1
+EyeLashesL_2
+  rotate: false
+  xy:809,471
+  size:100,80
+  orig:100,80
+  offset:0,0
+  index:-1
+EyeLeftMask
+  rotate: false
+  xy:908,378
+  size:78,89
+  orig:78,89
+  offset:0,0
+  index:-1
+LegRight
+  rotate: false
+  xy:784,1196
+  size:138,424
+  orig:240,444
+  offset:60,14
+  index:-1
+LegLeft
+  rotate: false
+  xy:784,1624
+  size:139,424
+  orig:240,444
+  offset:46,14
+  index:-1
+EyeR_4
+  rotate: false
+  xy:1319,642
+  size:80,31
+  orig:80,31
+  offset:0,0
+  index:-1
+EyeL_3
+  rotate: false
+  xy:1139,526
+  size:79,25
+  orig:79,25
+  offset:0,0
+  index:-1
+Mouth03_H
+  rotate: false
+  xy:1222,562
+  size:45,53
+  orig:60,60
+  offset:7,3
+  index:-1
+HairBackLeft
+  rotate: false
+  xy:732,123
+  size:66,99
+  orig:66,99
+  offset:0,0
+  index:-1
+ArmRightFore02
+  rotate: false
+  xy:927,1750
+  size:195,298
+  orig:360,432
+  offset:108,93
+  index:-1
+EyeL_5
+  rotate: false
+  xy:990,409
+  size:75,52
+  orig:75,52
+  offset:0,0
+  index:-1
+BodyAcceBust
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+EyeR_5
+  rotate: false
+  xy:1794,1533
+  size:75,52
+  orig:75,52
+  offset:0,0
+  index:-1
+Mouth03_B
+  rotate: false
+  xy:1794,1476
+  size:45,53
+  orig:60,60
+  offset:7,3
+  index:-1
+Mouth03_C
+  rotate: false
+  xy:1407,863
+  size:34,33
+  orig:60,60
+  offset:13,17
+  index:-1
+ArmLeftHand03
+  rotate: false
+  xy:1118,639
+  size:102,139
+  orig:270,270
+  offset:67,101
+  index:-1
+LegLeftKnee
+  rotate: false
+  xy:1448,1137
+  size:77,321
+  orig:180,360
+  offset:37,20
+  index:-1
+LegRightKnee
+  rotate: false
+  xy:1712,1474
+  size:78,321
+  orig:180,360
+  offset:56,20
+  index:-1
+EyeBlowL_D
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+Body
+  rotate: false
+  xy:0,1028
+  size:780,1020
+  orig:780,1020
+  offset:0,0
+  index:-1
+EyeBlowL_B
+  rotate: false
+  xy:1224,619
+  size:76,32
+  orig:110,60
+  offset:16,13
+  index:-1
+EyeLeftWhite
+  rotate: false
+  xy:1579,925
+  size:61,61
+  orig:61,61
+  offset:0,0
+  index:-1
+Neck
+  rotate: false
+  xy:634,226
+  size:270,216
+  orig:270,216
+  offset:0,0
+  index:-1
+ArmRightHand06
+  rotate: false
+  xy:1740,1349
+  size:95,121
+  orig:270,270
+  offset:98,118
+  index:-1
+ArmLeftHand06
+  rotate: false
+  xy:634,101
+  size:94,121
+  orig:270,270
+  offset:67,119
+  index:-1
+Bust
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+EyeBlowR_B
+  rotate: false
+  xy:1387,689
+  size:77,32
+  orig:110,60
+  offset:13,13
+  index:-1
+EyeLeft
+  rotate: false
+  xy:1387,725
+  size:47,57
+  orig:54,63
+  offset:4,3
+  index:-1
+HairFront03
+  rotate: false
+  xy:927,1455
+  size:191,291
+  orig:191,291
+  offset:0,0
+  index:-1
+BodyAcceNeck
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+BodyBack
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+ArmLeftHand05
+  rotate: false
+  xy:1289,935
+  size:121,139
+  orig:270,270
+  offset:58,101
+  index:-1
+HairFront02
+  rotate: false
+  xy:809,639
+  size:203,251
+  orig:203,251
+  offset:0,0
+  index:-1
+Hip
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+ArmRightHand01
+  rotate: false
+  xy:1178,995
+  size:107,168
+  orig:270,270
+  offset:86,71
+  index:-1
+HairBackRight
+  rotate: false
+  xy:1069,452
+  size:66,99
+  orig:66,99
+  offset:0,0
+  index:-1
+EyeLeft_Kira
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+Mouth01_E
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+HairFaceSideLeft
+  rotate: false
+  xy:1100,782
+  size:74,380
+  orig:74,380
+  offset:0,0
+  index:-1
+HairFront01
+  rotate: false
+  xy:1122,1454
+  size:188,292
+  orig:188,292
+  offset:0,0
+  index:-1
+EyeRight_Kira
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+ArmLeftHand04
+  rotate: false
+  xy:1569,990
+  size:91,133
+  orig:270,270
+  offset:68,107
+  index:-1
+HairAcceLeftBack
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+Mouth01_A
+  rotate: false
+  xy:913,620
+  size:46,15
+  orig:60,60
+  offset:7,25
+  index:-1
+HipBack
+  rotate: false
+  xy:0,720
+  size:447,304
+  orig:447,304
+  offset:0,0
+  index:-1
+ArmRightHand03
+  rotate: false
+  xy:1830,1909
+  size:103,139
+  orig:270,270
+  offset:90,100
+  index:-1
+HairFaceSideRight
+  rotate: false
+  xy:1370,1078
+  size:74,380
+  orig:74,380
+  offset:0,0
+  index:-1
+EyeRightWhite
+  rotate: false
+  xy:1380,786
+  size:61,61
+  orig:61,61
+  offset:0,0
+  index:-1
+HeadAcceRight
+  rotate: false
+  xy:1712,1799
+  size:114,249
+  orig:114,249
+  offset:0,0
+  index:-1
+Mouth01_H
+  rotate: false
+  xy:0,80
+  size:45,13
+  orig:60,60
+  offset:7,30
+  index:-1
+HairAcceLeft
+  rotate: false
+  xy:1569,1127
+  size:116,121
+  orig:116,121
+  offset:0,0
+  index:-1
+HeadFace
+  rotate: false
+  xy:451,665
+  size:292,359
+  orig:292,359
+  offset:0,0
+  index:-1
+EyeBlowL_A
+  rotate: false
+  xy:1873,1522
+  size:78,28
+  orig:110,60
+  offset:15,18
+  index:-1
+Mouth01_G
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+Mouth01_F
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+EyeBlowR_D
+  rotate: false
+  xy: 0,0
+  size:0,0
+  orig:0,0
+  offset:0,0
+  index:-1
+Mouth01_C
+  rotate: false
+  xy:274,209
+  size:34,13
+  orig:60,60
+  offset:13,27
+  index:-1
+EyeBlowL_C
+  rotate: false
+  xy:802,193
+  size:76,29
+  orig:110,60
+  offset:18,17
+  index:-1
+HairBack02
+  rotate: false
+  xy:380,192
+  size:250,250
+  orig:250,250
+  offset:0,0
+  index:-1
+Mouth02_D
+  rotate: false
+  xy:274,186
+  size:18,19
+  orig:60,60
+  offset:22,23
+  index:-1
+ArmRight
+  rotate: false
+  xy:1529,1252
+  size:97,221
+  orig:204,288
+  offset:79,34
+  index:-1
+LegLeftAcce
+  rotate: false
+  xy:1319,677
+  size:64,54
+  orig:64,54
+  offset:0,0
+  index:-1

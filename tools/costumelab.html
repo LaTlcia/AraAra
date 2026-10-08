@@ -1,0 +1,43 @@
+<!doctype html>
+<!-- 开发用：把所有 jobspine 服装在待机姿势下渲染成缩略图，检查有没有多余/错位的部件 -->
+<html><head><meta charset="utf-8"><title>Costume Lab</title>
+<script src="../node_modules/pixi.js/dist/browser/pixi.min.js"></script>
+<script src="../node_modules/pixi-spine/dist/pixi-spine.umd.js"></script>
+<style>body{margin:0;background:#556;font:11px sans-serif;color:#fff}#g{display:flex;flex-wrap:wrap;gap:4px;padding:4px}figure{margin:0;text-align:center}img{width:110px;background:#334}</style>
+</head><body><div id="g"></div>
+<script type="module">
+import { createApp, JobPet, ChibiPet } from "../src/renderer/stage.js";
+const q = new URLSearchParams(location.search);
+const chibi = q.get("mode") === "chibi";
+const div = document.createElement("div"); div.style.cssText = `width:300px;height:${chibi ? 220 : 500}px;position:absolute;left:-9999px`; document.body.appendChild(div);
+const app = createApp(div);
+const data = await (await fetch("../assets/data/araya.json")).json();
+const only = q.get("c");
+if (chibi) {
+  // Q 版：每套服装取 3 个动作的一帧
+  for (const c of data.costumes.filter((c) => !only || String(c.id) === only)) {
+    const pet = new ChibiPet(app);
+    await pet.load(c, "../assets");
+    for (const a of ["WaitDefault", "MoveFront", "Victory42", "RestLoop"]) {
+      pet.spine.state.setAnimation(0, a, true); pet.spine.update(0.3); app.renderer.render(app.stage);
+      const fig = document.createElement("figure");
+      fig.innerHTML = `<img src="${app.view.toDataURL()}" style="width:70px"><figcaption>${c.id}<br>${a.slice(0, 7)}</figcaption>`;
+      document.getElementById("g").appendChild(fig);
+    }
+    app.stage.removeChild(pet.spine); pet.spine.destroy({ children: true });
+  }
+  document.title = "ready";
+  throw new Error("done");
+}
+for (const c of data.costumes.filter((c) => !only || String(c.id) === only)) {
+  const pet = new JobPet(app);
+  await pet.load(c, "../assets");
+  pet.spine.update(0);
+  app.renderer.render(app.stage);
+  const fig = document.createElement("figure");
+  fig.innerHTML = `<img src="${app.view.toDataURL()}"><figcaption>${c.id} ${c.nameZh}</figcaption>`;
+  document.getElementById("g").appendChild(fig);
+  pet.destroy(); app.stage.removeChild(pet.spine); pet.spine.destroy({ children: true });
+}
+document.title = "ready";
+</script></body></html>

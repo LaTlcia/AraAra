@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' pet:; script-src 'self' pet:; style-src 'self' pet: 'unsafe-inline'; img-src 'self' pet: data:">
+<title>亚罗椰桌宠 · 设置</title>
+<link rel="stylesheet" href="settings.css">
+</head>
+<body>
+<aside>
+  <div class="brand"><span class="dot"></span>亚罗椰桌宠</div>
+  <nav>
+    <a href="#chat" data-tab="chat">对话</a>
+    <a href="#look" data-tab="look">外观</a>
+    <a href="#api" data-tab="api">情绪接口</a>
+    <a href="#history" data-tab="history">对话记录</a>
+    <a href="#about" data-tab="about">版权声明</a>
+  </nav>
+  <div class="saved" id="saved">已保存</div>
+</aside>
+
+<main>
+  <!-- 对话 -->
+  <section id="tab-chat" class="tab">
+    <h1>对话</h1>
+    <p class="lead">使用 OpenAI 兼容的 Chat Completions 接口（DeepSeek、通义千问、Ollama、各种中转都可以）。人格来自角色卡（含世界书），AI 回复里的情绪标签会驱动表情和动作。</p>
+
+    <div class="card">
+      <label class="row"><span>你的称呼</span><input name="userName" placeholder="主人"></label>
+      <label class="row"><span>对话框自动收起</span>
+        <select name="chatAutoClose">
+          <option value="0">不自动收起</option>
+          <option value="15">15 秒没对话后</option>
+          <option value="30">30 秒没对话后</option>
+          <option value="60">1 分钟没对话后</option>
+          <option value="180">3 分钟没对话后</option>
+        </select>
+      </label>
+      <label class="row"><span>接口地址</span><input name="baseUrl" placeholder="Base URL"></label>
+      <label class="row"><span>模型</span><input name="model" placeholder="模型名称"></label>
+      <div class="row"><span></span><em id="api-hint" class="hint"></em></div>
+      <label class="row"><span>API Key</span><input name="apiKey" type="password" autocomplete="off"></label>
+      <label class="row"><span>代理</span><input name="proxy" placeholder="留空跟随系统代理，例如 http://127.0.0.1:7890"></label>
+      <div class="row"><span></span><div class="actions"><button id="test" class="primary">测试连接</button><span id="test-result" class="hint"></span></div></div>
+    </div>
+
+    <div class="card">
+      <label class="row"><span>回复字数上限</span><input name="replyMaxChars" type="number" min="0" max="2000"><em>0 = 不限制</em></label>
+      <label class="row"><span>记住的轮数</span><input name="historyTurns" type="number" min="1" max="200"></label>
+      <label class="row top"><span>主人设定</span><textarea name="ownerNotes" rows="4" placeholder="一行一条，会以「主人追加的全局设定」注入提示词，例如：&#10;我在学日语，偶尔用简单的日语和我说话"></textarea></label>
+      <label class="row"><span>自定义角色卡</span><input name="cardPath" placeholder="留空用内置角色卡（SillyTavern 格式 chara_card_v3 JSON 的完整路径）"></label>
+    </div>
+
+    <div class="card">
+      <label class="row check"><span>互动交给 AI</span><input type="checkbox" name="aiInteractions"><em>摸头、戳脸、拖动时由 AI 即兴回应（会消耗 token）</em></label>
+      <label class="row"><span>主动搭话</span><input name="idleTalkMinutes" type="number" min="0" max="600"><em>分钟没理她就由 AI 主动开口，0 = 关闭</em></label>
+      <div class="row"><span></span><div class="actions"><button id="reset" class="danger">清空对话记忆</button><button id="userdata">打开数据目录</button></div></div>
+    </div>
+  </section>
+
+  <!-- 外观 -->
+  <section id="tab-look" class="tab">
+    <h1>外观</h1>
+    <div class="card">
+      <label class="row"><span>服装</span><select name="costume"></select></label>
+      <div class="row"><span>形态</span>
+        <div class="seg">
+          <label><input type="radio" name="mode" value="job"> 立绘</label>
+          <label><input type="radio" name="mode" value="chibi"> Q 版</label>
+        </div>
+      </div>
+      <label class="row"><span>大小</span><input type="range" name="scale" min="0.5" max="2" step="0.05"><output id="scale-value"></output></label>
+      <label class="row check"><span>置顶显示</span><input type="checkbox" name="alwaysOnTop"></label>
+      <label class="row check"><span>开机自动启动</span><input type="checkbox" name="launchAtLogin"></label>
+    </div>
+    <div class="card">
+      <h3>Q 版自主活动</h3>
+      <label class="row check"><span>自己找事做</span><input type="checkbox" name="chibiAuto"><em>很久没人理她的时候，她会自己活动</em></label>
+      <label class="row check"><span>会掉下来</span><input type="checkbox" name="chibiFall"><em>放到半空时掉到屏幕底部；关掉就停在你放下的高度，在那里活动</em></label>
+      <label class="row"><span>什么时候开始</span>
+        <select name="chibiIdleSeconds">
+          <option value="0">一直都在活动</option>
+          <option value="30">30 秒没互动后</option>
+          <option value="60">1 分钟没互动后</option>
+          <option value="180">3 分钟没互动后</option>
+          <option value="300">5 分钟没互动后</option>
+          <option value="600">10 分钟没互动后</option>
+        </select>
+      </label>
+      <label class="row"><span>活跃程度</span><input type="range" name="chibiActivity" min="1" max="4" step="1"><output id="activity-value"></output></label>
+      <div class="row top"><span>会做的事</span>
+        <div class="chips">
+          <label><input type="checkbox" name="chibiActions.walk"> 小跑</label>
+          <label><input type="checkbox" name="chibiActions.dash"> 冲刺</label>
+          <label><input type="checkbox" name="chibiActions.hop"> 蹦蹦跳跳</label>
+          <label><input type="checkbox" name="chibiActions.dance"> 跳舞庆祝</label>
+          <label><input type="checkbox" name="chibiActions.sit"> 坐下休息</label>
+          <label><input type="checkbox" name="chibiActions.sleep"> 打瞌睡</label>
+          <label><input type="checkbox" name="chibiActions.look"> 东张西望</label>
+          <label><input type="checkbox" name="chibiActions.talk"> 自言自语</label>
+        </div>
+      </div>
+      <p class="hint">还没到开始时间时她会安静待着，偶尔看看四周。打瞌睡只在深夜或者很久没人理她时出现，点她一下就会醒。</p>
+    </div>
+
+    <div class="card tips">
+      <h3>操作</h3>
+      <ul>
+        <li>点头 = 摸头，点脸 = 戳脸，在头上来回晃鼠标 = 一直摸</li>
+        <li>按住拖动可以把她搬到别处；Q 版放在半空会掉下来（可以关掉）</li>
+        <li>双击或 <kbd>Ctrl/⌘</kbd>+<kbd>Shift</kbd>+<kbd>Y</kbd> 打开对话框，点 × 或按 <kbd>Esc</kbd> 收起；输入 <code>/reset</code> 清空记忆</li>
+        <li>鼠标移到她身上会出现「说话 / 换衣服 / 菜单」按钮；右键也能打开菜单</li>
+        <li>透明的地方鼠标会穿透，不影响你点后面的窗口</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 情绪接口 -->
+  <section id="tab-api" class="tab">
+    <h1>情绪接口</h1>
+    <p class="lead">本地 HTTP 接口，可以让别的程序（脚本、机器人、Claude Code 的 hook 等）驱动亚罗椰的表情、动作和台词。只监听 127.0.0.1。</p>
+    <div class="card">
+      <label class="row check"><span>启用</span><input type="checkbox" name="apiServer"></label>
+      <label class="row"><span>端口</span><input name="apiPort" type="number" min="1024" max="65535"></label>
+    </div>
+    <div class="card">
+      <h3>示例</h3>
+      <pre id="api-examples"></pre>
+      <h3>可用情绪标签</h3>
+      <table class="emo"><thead><tr><th>标签</th><th>情绪</th><th>表情</th><th>jobspine 动作</th><th>Q 版</th></tr></thead><tbody id="emo-table"></tbody></table>
+    </div>
+  </section>
+
+  <!-- 对话记录 -->
+  <section id="tab-history" class="tab">
+    <h1>对话记录</h1>
+    <div class="card"><div id="history" class="history"></div></div>
+  </section>
+
+  <!-- 关于 -->
+  <section id="tab-about" class="tab">
+    <h1>版权声明</h1>
+    <div class="card about">
+      <p>角色、立绘、语音等素材的版权归 Assault Lily Project 及《突击莉莉 Last Bullet》相关权利方所有。本程序为非官方同人作品，仅供个人学习交流，请勿用于商业用途或二次分发素材。</p>
+    </div>
+  </section>
+</main>
+<script type="module" src="settings.js"></script>
+</body>
+</html>

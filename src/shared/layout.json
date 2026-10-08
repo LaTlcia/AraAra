@@ -1,0 +1,9 @@
+{
+  "_comment": "窗口尺寸：角色高度 = charHeight × scale；窗口宽 = max(minWidth × ui, 角色高 × widthRatio)；窗口高 = 角色高 + topReserve × ui（头顶留给气泡）。ui = clamp(√scale, uiMin, uiMax)，控制气泡、按钮、输入框的大小。",
+  "job":   { "charHeight": 330, "minWidth": 300, "widthRatio": 0.62, "topReserve": 175 },
+  "chibi": { "charHeight": 200, "minWidth": 280, "widthRatio": 0.85, "topReserve": 140 },
+  "scaleMin": 0.5,
+  "scaleMax": 2,
+  "uiMin": 0.85,
+  "uiMax": 1.25
+}

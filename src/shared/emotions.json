@@ -1,0 +1,22 @@
+{
+  "_comment": "情绪标签 → 表情(face，见 faces.js) + jobspine 动作(motion，见 stage.js 的 JOB_MOTIONS) + Q版动作(chibi) + 漫符(manpu)。AI 回复里写 [标签] 就会触发。aliases 是也能识别的中文写法。",
+  "normal":   { "label": "平静",       "face": "Normal",         "motion": "Base",         "chibi": "idle",    "manpu": null,     "aliases": ["平静", "普通"] },
+  "smile":    { "label": "微笑",       "face": "Smile",          "motion": "Fun",          "chibi": "victory", "manpu": "note",   "aliases": ["微笑", "笑"] },
+  "happy":    { "label": "开心",       "face": "Smile_L",        "motion": "Fun",          "chibi": "cheer",   "manpu": "note",   "aliases": ["开心", "高兴"] },
+  "smug":     { "label": "从容坏笑",   "face": "HalfEye_Normal", "motion": "PoseChange05", "chibi": "pose",    "manpu": null,     "aliases": ["坏笑", "得意", "从容"] },
+  "tease":    { "label": "调戏/撩人",  "face": "Wink",           "motion": "PoseChange04", "chibi": "spin",    "manpu": "heart",  "aliases": ["调戏", "撩", "眨眼"] },
+  "proud":    { "label": "自信",       "face": "Strong",         "motion": "Positive",     "chibi": "pose",    "manpu": "sparkle","aliases": ["自信", "骄傲"] },
+  "excited":  { "label": "兴奋/心动",  "face": "Kira",           "motion": "Fun",          "chibi": "jump",    "manpu": "heart",  "aliases": ["兴奋", "心动", "两眼放光"] },
+  "shy":      { "label": "害羞",       "face": "Shy",            "motion": "Shy",          "chibi": "idle",    "manpu": "sweat",  "aliases": ["害羞", "脸红"] },
+  "surprise": { "label": "惊讶",       "face": "Surprise",       "motion": "Surprise",     "chibi": "hurt",    "manpu": "exclaim","aliases": ["惊讶", "吃惊"] },
+  "shock":    { "label": "大受打击",   "face": "Surprise_L",     "motion": "Surprise",     "chibi": "faint",   "manpu": "exclaim","aliases": ["震惊", "打击", "失态"] },
+  "think":    { "label": "思考",       "face": "Serious",        "motion": "Think",        "chibi": "idle",    "manpu": "question","aliases": ["思考", "疑惑"] },
+  "serious":  { "label": "认真",       "face": "Serious",        "motion": "PoseChange03", "chibi": "pose",    "manpu": null,     "aliases": ["认真", "严肃"] },
+  "angry":    { "label": "生气",       "face": "Anger",          "motion": "Anger",        "chibi": "hurt",    "manpu": "anger",  "aliases": ["生气", "愤怒"] },
+  "pout":     { "label": "不满/吃醋",  "face": "HalfEye_Anger",  "motion": "Anger",        "chibi": "idle",    "manpu": "anger",  "aliases": ["不满", "吃醋", "鼓脸"] },
+  "sad":      { "label": "难过",       "face": "Sad",            "motion": "Negative",     "chibi": "sit",     "manpu": "sweat",  "aliases": ["难过", "伤心", "失落"] },
+  "trouble":  { "label": "困扰/无奈",  "face": "Trouble",        "motion": "Think",        "chibi": "idle",    "manpu": "sweat",  "aliases": ["困扰", "无奈", "为难"] },
+  "bored":    { "label": "无聊",       "face": "Ennui",          "motion": "PoseChange04", "chibi": "sit",     "manpu": "dots",   "aliases": ["无聊", "厌倦"] },
+  "sleepy":   { "label": "困倦",       "face": "Sleep",          "motion": "Base",         "chibi": "sit",     "manpu": "zzz",    "aliases": ["困", "困倦", "睡"] },
+  "gentle":   { "label": "温柔安心",   "face": "Close",          "motion": "Positive",     "chibi": "idle",    "manpu": null,     "aliases": ["温柔", "安心"] }
+}

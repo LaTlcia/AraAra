@@ -1,0 +1,162 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="../node_modules/pixi.js/dist/browser/pixi.min.js"></script>
+<script src="../node_modules/pixi-spine/dist/pixi-spine.umd.js"></script>
+<style>body { margin: 0; } #stage { width: 1024px; height: 1024px; }</style>
+</head>
+<body>
+<div id="stage"></div>
+<script type="module">
+import { JobPet } from "../src/renderer/stage.js";
+
+const div = document.getElementById("stage");
+const app = new PIXI.Application({ width: 1024, height: 1024, backgroundAlpha: 0, antialias: true, resolution: 1, preserveDrawingBuffer: true });
+div.appendChild(app.view);
+const pet = new JobPet(app);
+const data = await (await fetch("../assets/data/araya.json")).json();
+await pet.load(data.costumes.find((c) => c.id === 1042), "../assets");
+app.ticker.stop();
+pet.spine.autoUpdate = false;
+pet.blink.next = 1e9;
+pet.spine.state.setAnimation(0, "01BaseLoop", true);
+
+function renderHead(face, faceWidth, cx, cy) {
+  pet.setFace(face);
+  pet.bounds = null;
+  pet.spine.scale.set(1);
+  pet.spine.x = 0; pet.spine.y = 0;
+  pet.spine.update(0);
+  const sk = pet.spine.skeleton;
+  const eyeL = sk.findBone("EyeL"), eyeR = sk.findBone("EyeR"), face0 = sk.findBone("FaceFront");
+  const eyeDist = Math.hypot(eyeL.worldX - eyeR.worldX, eyeL.worldY - eyeR.worldY);
+  const s = faceWidth / (eyeDist * 2.6);
+  pet.spine.scale.set(s);
+  pet.spine.x = cx - face0.worldX * s;
+  pet.spine.y = cy - face0.worldY * s;
+  pet.spine.update(0);
+  app.renderer.render(app.stage);
+  return app.view;
+}
+
+function squircle(ctx, x, y, size, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + size, y, x + size, y + size, r);
+  ctx.arcTo(x + size, y + size, x, y + size, r);
+  ctx.arcTo(x, y + size, x, y, r);
+  ctx.arcTo(x, y, x + size, y, r);
+  ctx.closePath();
+}
+
+// ---- 应用图标 1024 ----
+function appIcon() {
+  const c = document.createElement("canvas");
+  c.width = c.height = 1024;
+  const ctx = c.getContext("2d");
+  const pad = 100, size = 824, r = 186;
+  ctx.save();
+  ctx.shadowColor = "rgba(150, 30, 80, 0.35)";
+  ctx.shadowBlur = 30;
+  ctx.shadowOffsetY = 12;
+  squircle(ctx, pad, pad, size, r);
+  const g = ctx.createLinearGradient(0, pad, 0, pad + size);
+  g.addColorStop(0, "#ffe1ee");
+  g.addColorStop(0.55, "#ffbfd9");
+  g.addColorStop(1, "#ff80b3");
+  ctx.fillStyle = g;
+  ctx.fill();
+  ctx.restore();
+  ctx.save();
+  squircle(ctx, pad, pad, size, r);
+  ctx.clip();
+  // 背景光斑
+  const rg = ctx.createRadialGradient(512, 420, 40, 512, 420, 520);
+  rg.addColorStop(0, "rgba(255,255,255,0.75)");
+  rg.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.fillStyle = rg;
+  ctx.fillRect(0, 0, 1024, 1024);
+  ctx.drawImage(renderHead("Wink", 560, 512, 640), 0, 0);
+  ctx.restore();
+  ctx.lineWidth = 10;
+  ctx.strokeStyle = "rgba(255,255,255,0.85)";
+  squircle(ctx, pad + 5, pad + 5, size - 10, r - 5);
+  ctx.stroke();
+  return c.toDataURL("image/png");
+}
+
+// ---- Windows 托盘：彩色小头像 ----
+function trayColor(px) {
+  const big = document.createElement("canvas");
+  big.width = big.height = 256;
+  const ctx = big.getContext("2d");
+  ctx.beginPath();
+  ctx.arc(128, 128, 124, 0, Math.PI * 2);
+  ctx.fillStyle = "#ffbfd9";
+  ctx.fill();
+  ctx.save();
+  ctx.clip();
+  const src = renderHead("Smile", 560, 512, 600);
+  ctx.drawImage(src, 512 - 300, 600 - 330, 600, 600, 0, 0, 256, 256);
+  ctx.restore();
+  const c = document.createElement("canvas");
+  c.width = c.height = px;
+  c.getContext("2d").drawImage(big, 0, 0, px, px);
+  return c.toDataURL("image/png");
+}
+
+// ---- macOS 托盘：单色模板图（猫耳发饰 + 爱心） ----
+function trayTemplate(px) {
+  const c = document.createElement("canvas");
+  c.width = c.height = px;
+  const ctx = c.getContext("2d");
+  ctx.scale(px / 32, px / 32);
+  ctx.fillStyle = "#000";
+  // 两只猫耳
+  ctx.beginPath();
+  ctx.moveTo(4, 15); ctx.lineTo(7, 3); ctx.lineTo(14, 10); ctx.closePath();
+  ctx.moveTo(28, 15); ctx.lineTo(25, 3); ctx.lineTo(18, 10); ctx.closePath();
+  ctx.fill();
+  // 爱心
+  ctx.beginPath();
+  ctx.moveTo(16, 29);
+  ctx.bezierCurveTo(4, 21, 5, 11, 11, 11.5);
+  ctx.bezierCurveTo(13.6, 11.7, 15.2, 13.4, 16, 15);
+  ctx.bezierCurveTo(16.8, 13.4, 18.4, 11.7, 21, 11.5);
+  ctx.bezierCurveTo(27, 11, 28, 21, 16, 29);
+  ctx.fill();
+  return c.toDataURL("image/png");
+}
+
+// Windows .ico 用的各尺寸
+function scaled(url, px) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement("canvas");
+      c.width = c.height = px;
+      const ctx = c.getContext("2d");
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(img, 0, 0, px, px);
+      resolve(c.toDataURL("image/png"));
+    };
+    img.src = url;
+  });
+}
+const big = appIcon();
+const icoSizes = {};
+for (const px of [256, 128, 64, 48, 32, 16]) icoSizes[px] = await scaled(big, px);
+window.icoSizes = icoSizes;
+
+window.icons = {
+  "icon.png": big,
+  "tray.png": trayColor(32),
+  "tray@2x.png": trayColor(64),
+  "trayTemplate.png": trayTemplate(16),
+  "trayTemplate@2x.png": trayTemplate(32),
+};
+document.title = "ready";
+</script>
+</body>
+</html>

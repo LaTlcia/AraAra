@@ -1,0 +1,621 @@
+CharacterJobSpine_01_0117_042.png
+size: 1024,1024
+format: RGBA4444
+filter: Linear,Linear
+repeat: none
+Effect01
+  rotate: false
+  xy: 783, 216
+  size: 111, 80
+  orig: 124, 124
+  offset: 10, 44
+  index: -1
+001FaceEyeLeftClose
+  rotate: false
+  xy: 933, 373
+  size: 48, 39
+  orig: 94, 109
+  offset: 26, 29
+  index: -1
+01BodyBackWaist
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+01BodyWing
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+01HairFrontB
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+001FaceMouthLaugh
+  rotate: false
+  xy: 321, 53
+  size: 28, 11
+  orig: 62, 52
+  offset: 19, 27
+  index: -1
+002FaceMouthOpen
+  rotate: false
+  xy: 295, 44
+  size: 22, 20
+  orig: 52, 52
+  offset: 21, 18
+  index: -1
+HairTail
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+01HipBack
+  rotate: false
+  xy: 0, 422
+  size: 234, 247
+  orig: 234, 247
+  offset: 0, 0
+  index: -1
+WeaponDual
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 1024, 1024
+  offset: 0, 0
+  index: -1
+ArmLeftHand
+  rotate: false
+  xy: 933, 328
+  size: 30, 41
+  orig: 52, 52
+  offset: 6, 9
+  index: -1
+ArmRight
+  rotate: false
+  xy: 134, 341
+  size: 41, 77
+  orig: 78, 117
+  offset: 21, 10
+  index: -1
+LegRightKnee
+  rotate: false
+  xy: 978, 900
+  size: 39, 124
+  orig: 91, 156
+  offset: 33, 14
+  index: -1
+001FaceEyebrowSad
+  rotate: false
+  xy: 581, 86
+  size: 79, 19
+  orig: 104, 52
+  offset: 14, 11
+  index: -1
+Accessory01
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+001FaceMouthAnger
+  rotate: false
+  xy: 970, 506
+  size: 27, 28
+  orig: 62, 52
+  offset: 18, 13
+  index: -1
+LegRightFoot
+  rotate: false
+  xy: 285, 90
+  size: 40, 47
+  orig: 91, 78
+  offset: 23, 11
+  index: -1
+LegRightFoot2
+  rotate: false
+  xy: 0, 29
+  size: 54, 39
+  orig: 91, 78
+  offset: 23, 19
+  index: -1
+02HairBackB
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+Effect02
+  rotate: false
+  xy: 0, 72
+  size: 119, 31
+  orig: 124, 124
+  offset: 3, 48
+  index: -1
+02HairFaceSideLeft
+  rotate: false
+  xy: 517, 89
+  size: 60, 143
+  orig: 60, 143
+  offset: 0, 0
+  index: -1
+LegLeftKnee2
+  rotate: false
+  xy: 933, 416
+  size: 33, 118
+  orig: 91, 156
+  offset: 28, 18
+  index: -1
+001FaceEyeRightClose
+  rotate: false
+  xy: 162, 106
+  size: 63, 40
+  orig: 125, 109
+  offset: 26, 35
+  index: -1
+ArmRightHand
+  rotate: false
+  xy: 884, 79
+  size: 30, 44
+  orig: 52, 52
+  offset: 13, 6
+  index: -1
+001FaceMouthOpen
+  rotate: false
+  xy: 497, 67
+  size: 29, 18
+  orig: 62, 52
+  offset: 18, 20
+  index: -1
+ArmLeft
+  rotate: false
+  xy: 123, 71
+  size: 35, 75
+  orig: 78, 104
+  offset: 21, 8
+  index: -1
+01HeadHat
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+001FaceEyeLeft
+  rotate: false
+  xy: 674, 89
+  size: 62, 60
+  orig: 125, 146
+  offset: 39, 32
+  index: -1
+001FaceEyeRight
+  rotate: false
+  xy: 121, 150
+  size: 88, 65
+  orig: 167, 146
+  offset: 33, 38
+  index: -1
+LegLeftFoot2
+  rotate: false
+  xy: 420, 91
+  size: 44, 38
+  orig: 91, 78
+  offset: 20, 20
+  index: -1
+02HipSkirt
+  rotate: false
+  xy: 450, 487
+  size: 234, 247
+  orig: 234, 247
+  offset: 0, 0
+  index: -1
+ArmRightForeB
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+02BodyFrontScarf
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+ArmLeftHand3
+  rotate: false
+  xy: 468, 85
+  size: 25, 44
+  orig: 52, 52
+  offset: 17, 6
+  index: -1
+001FaceEyebrow
+  rotate: false
+  xy: 225, 69
+  size: 82, 17
+  orig: 104, 52
+  offset: 13, 13
+  index: -1
+02Hip
+  rotate: false
+  xy: 109, 219
+  size: 117, 91
+  orig: 117, 91
+  offset: 0, 0
+  index: -1
+ArmLeftHand2
+  rotate: false
+  xy: 238, 491
+  size: 25, 31
+  orig: 52, 52
+  offset: 14, 19
+  index: -1
+02Face
+  rotate: false
+  xy: 420, 133
+  size: 93, 99
+  orig: 215, 234
+  offset: 92, 63
+  index: -1
+ArmRightHand2
+  rotate: false
+  xy: 420, 55
+  size: 25, 32
+  orig: 52, 52
+  offset: 15, 18
+  index: -1
+01BodyOnepiece
+  rotate: false
+  xy: 450, 738
+  size: 260, 286
+  orig: 260, 286
+  offset: 0, 0
+  index: -1
+002FaceMouthLaugh
+  rotate: false
+  xy: 179, 407
+  size: 17, 11
+  orig: 52, 52
+  offset: 25, 25
+  index: -1
+ArmLeftForeA
+  rotate: false
+  xy: 230, 141
+  size: 117, 91
+  orig: 117, 91
+  offset: 0, 0
+  index: -1
+002FaceMouthAnger
+  rotate: false
+  xy: 978, 870
+  size: 27, 26
+  orig: 52, 52
+  offset: 18, 13
+  index: -1
+01Hip
+  rotate: false
+  xy: 0, 107
+  size: 117, 91
+  orig: 117, 91
+  offset: 0, 0
+  index: -1
+ArmLeftForeB
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+WeaponDummy
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 1024, 1024
+  offset: 0, 0
+  index: -1
+002FaceEyeRight
+  rotate: false
+  xy: 907, 538
+  size: 71, 68
+  orig: 209, 147
+  offset: 81, 37
+  index: -1
+03Hip
+  rotate: false
+  xy: 238, 578
+  size: 117, 91
+  orig: 117, 91
+  offset: 0, 0
+  index: -1
+LegLeftKnee
+  rotate: false
+  xy: 847, 94
+  size: 33, 118
+  orig: 91, 156
+  offset: 28, 18
+  index: -1
+LegRight2
+  rotate: false
+  xy: 359, 546
+  size: 44, 123
+  orig: 117, 169
+  offset: 45, 28
+  index: -1
+02BodyWaist
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+01HairBackB
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+02HeadHat
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+001FaceEyeLeftLaugh
+  rotate: false
+  xy: 884, 127
+  size: 47, 42
+  orig: 94, 109
+  offset: 26, 26
+  index: -1
+01HairFaceSideRight
+  rotate: false
+  xy: 714, 154
+  size: 65, 142
+  orig: 65, 143
+  offset: 0, 0
+  index: -1
+LegLeft
+  rotate: false
+  xy: 628, 109
+  size: 42, 123
+  orig: 104, 156
+  offset: 29, 22
+  index: -1
+LegLeft2
+  rotate: false
+  xy: 898, 173
+  size: 42, 123
+  orig: 104, 156
+  offset: 29, 22
+  index: -1
+02HairFrontA
+  rotate: false
+  xy: 688, 519
+  size: 215, 215
+  orig: 215, 215
+  offset: 0, 0
+  index: -1
+002FaceEyebrow
+  rotate: false
+  xy: 294, 515
+  size: 36, 15
+  orig: 62, 52
+  offset: 9, 14
+  index: -1
+002FaceEyeRightClose
+  rotate: false
+  xy: 238, 526
+  size: 52, 48
+  orig: 156, 109
+  offset: 61, 28
+  index: -1
+LegRight
+  rotate: false
+  xy: 581, 109
+  size: 43, 123
+  orig: 117, 169
+  offset: 46, 28
+  index: -1
+02HairBackA
+  rotate: false
+  xy: 0, 673
+  size: 221, 351
+  orig: 221, 351
+  offset: 0, 0
+  index: -1
+01BodyBackShoulder
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+01Face
+  rotate: false
+  xy: 0, 202
+  size: 105, 108
+  orig: 215, 234
+  offset: 70, 64
+  index: -1
+01HairFaceSideLeft
+  rotate: false
+  xy: 783, 69
+  size: 60, 143
+  orig: 60, 143
+  offset: 0, 0
+  index: -1
+ArmRightForeA
+  rotate: false
+  xy: 0, 314
+  size: 130, 104
+  orig: 130, 104
+  offset: 0, 0
+  index: -1
+01BodyFrontScarf
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+01Body
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+002FaceEyebrowSad
+  rotate: false
+  xy: 256, 50
+  size: 35, 15
+  orig: 62, 52
+  offset: 11, 16
+  index: -1
+02HairFrontB
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+01HairFrontA
+  rotate: false
+  xy: 714, 300
+  size: 215, 215
+  orig: 215, 215
+  offset: 0, 0
+  index: -1
+01BodyWaist
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+001FaceEyebrowAnger
+  rotate: false
+  xy: 311, 68
+  size: 79, 17
+  orig: 104, 52
+  offset: 14, 8
+  index: -1
+002FaceEyebrowAnger
+  rotate: false
+  xy: 58, 51
+  size: 37, 17
+  orig: 62, 52
+  offset: 9, 8
+  index: -1
+ArmRightHand3
+  rotate: false
+  xy: 225, 20
+  size: 27, 45
+  orig: 52, 52
+  offset: 12, 5
+  index: -1
+001FaceMouth
+  rotate: false
+  xy: 407, 661
+  size: 18, 8
+  orig: 62, 52
+  offset: 24, 26
+  index: -1
+02HipBack
+  rotate: false
+  xy: 238, 236
+  size: 234, 247
+  orig: 234, 247
+  offset: 0, 0
+  index: -1
+002FaceMouth
+  rotate: false
+  xy: 351, 535
+  size: 17, 7
+  orig: 52, 52
+  offset: 26, 26
+  index: -1
+002FaceEyeRightLaugh
+  rotate: false
+  xy: 229, 91
+  size: 52, 46
+  orig: 156, 109
+  offset: 61, 30
+  index: -1
+02BodyBackShoulder
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+02BodyOnepiece
+  rotate: false
+  xy: 714, 738
+  size: 260, 286
+  orig: 260, 286
+  offset: 0, 0
+  index: -1
+01HipSkirt
+  rotate: false
+  xy: 476, 236
+  size: 234, 247
+  orig: 234, 247
+  offset: 0, 0
+  index: -1
+01HairBackA
+  rotate: false
+  xy: 225, 673
+  size: 221, 351
+  orig: 221, 351
+  offset: 0, 0
+  index: -1
+001FaceEyeRightLaugh
+  rotate: false
+  xy: 162, 60
+  size: 59, 42
+  orig: 125, 109
+  offset: 30, 33
+  index: -1
+LegLeftFoot
+  rotate: false
+  xy: 294, 534
+  size: 53, 40
+  orig: 91, 78
+  offset: 19, 18
+  index: -1
+02HairFaceSideRight
+  rotate: false
+  xy: 351, 90
+  size: 65, 142
+  orig: 65, 143
+  offset: 0, 0
+  index: -1
+02Body
+  rotate: false
+  xy: 0, 0
+  size: 0, 0
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+LegRightKnee2
+  rotate: false
+  xy: 907, 610
+  size: 39, 124
+  orig: 91, 156
+  offset: 33, 14
+  index: -1

@@ -1,0 +1,98 @@
+{
+  "name": "araara",
+  "version": "1.0.0",
+  "description": "AraAra：亚罗椰的桌面宠物，立绘 / Q 版、11 套服装、AI 对话与情绪驱动动作",
+  "main": "src/main/main.js",
+  "private": true,
+  "scripts": {
+    "build:icons": "electron tools/make-icons.js",
+    "start": "electron .",
+    "dist:mac": "electron-builder --mac",
+    "dist:win": "electron-builder --win",
+    "dist": "electron-builder --mac --win"
+  },
+  "dependencies": {
+    "pixi-spine": "3.1.2",
+    "pixi.js": "6.5.10"
+  },
+  "devDependencies": {
+    "electron": "39.8.10",
+    "electron-builder": "25.1.8",
+    "resedit": "3.1.0"
+  },
+  "productName": "亚罗椰桌宠",
+  "author": "latlcia",
+  "build": {
+    "appId": "moe.latlcia.araya-pet",
+    "productName": "亚罗椰桌宠",
+    "artifactName": "AraAra-${version}-${os}-${arch}.${ext}",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json",
+      "!**/*.map"
+    ],
+    "asar": true,
+    "mac": {
+      "category": "public.app-category.entertainment",
+      "icon": "build/icon.png",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ],
+      "identity": null,
+      "extendInfo": {
+        "LSUIElement": true
+      }
+    },
+    "dmg": {
+      "title": "亚罗椰桌宠 ${version}"
+    },
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "shortcutName": "亚罗椰桌宠",
+      "artifactName": "AraAra-${version}-win-${arch}-setup.${ext}",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico"
+    },
+    "portable": {
+      "artifactName": "AraAra-${version}-win-${arch}-portable.${ext}"
+    },
+    "afterPack": "tools/after-pack.js"
+  }
+}

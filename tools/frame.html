@@ -1,0 +1,49 @@
+<!doctype html>
+<!-- 开发用：用固定尺寸的 iframe 模拟桌宠窗口，父页面模拟「屏幕」。?w=280&h=340&mode=chibi&idle=0&activity=4&sw=900&sh=520 -->
+<html><head><meta charset="utf-8"><style>
+body { margin: 0; background: #eee; }
+#screen { position: relative; overflow: hidden; background: repeating-conic-gradient(#ddd 0 25%, #f6f6f6 0 50%) 0 0 / 20px 20px; border-bottom: 3px solid #c2185b; }
+iframe { position: absolute; border: 1px dashed rgba(194, 24, 91, 0.5); background: transparent; }
+</style></head><body>
+<div id="screen"></div>
+<script>
+const q = new URLSearchParams(location.search);
+const W = Number(q.get("w") || 300), H = Number(q.get("h") || 505);
+const SW = Number(q.get("sw") || 900), SH = Number(q.get("sh") || Math.max(H + 40, 520));
+const screenEl = document.getElementById("screen");
+screenEl.style.width = SW + "px"; screenEl.style.height = SH + "px";
+const f = document.createElement("iframe");
+f.width = W; f.height = H;
+let pos = { x: Number(q.get("x") ?? SW - W - 40), y: Number(q.get("y") ?? SH - H) };
+const place = () => { f.style.left = pos.x + "px"; f.style.top = pos.y + "px"; };
+place();
+window.petHost = {
+  bounds: () => ({ x: pos.x, y: pos.y, width: W, height: H }),
+  move: (x, y) => { pos = { x, y }; place(); },
+  workArea: () => ({ x: 0, y: 0, width: SW, height: SH }),
+};
+const pass = ["mode", "idle", "activity", "costume", "fall", "autoclose"].filter((k) => q.has(k)).map((k) => `${k}=${q.get(k)}`).join("&");
+f.src = `../src/renderer/index.html?${pass}`;
+screenEl.appendChild(f);
+window.petFrame = f;
+// 测试辅助：面板隐藏时 rAF 不跑，用 setTimeout 驱动帧；snap() 把当前画面存成缩略图
+window.drive = async () => {
+  const w = f.contentWindow;
+  for (let i = 0; i < 50 && !w.__araya; i++) await new Promise((r) => setTimeout(r, 100));
+  w.requestAnimationFrame = (cb) => w.setTimeout(() => cb(w.performance.now()), 16);
+  w.cancelAnimationFrame = (id) => w.clearTimeout(id);
+  const tk = w.__araya.app.ticker; tk.stop(); tk.start();
+  return w;
+};
+const strip = document.createElement("div");
+strip.style.cssText = "display:flex;flex-wrap:wrap;gap:4px;padding:6px;font:11px sans-serif";
+document.body.appendChild(strip);
+window.snap = (label) => {
+  const w = f.contentWindow, c = w.document.querySelector("#stage canvas");
+  w.__araya.app.renderer.render(w.__araya.app.stage);
+  const box = document.createElement("figure");
+  box.style.cssText = "margin:0;background:#fff;text-align:center;border:1px solid #eee";
+  box.innerHTML = `<img src="${c.toDataURL()}" style="width:90px;height:auto;display:block"><figcaption>${label}</figcaption>`;
+  strip.appendChild(box);
+};
+</script></body></html>
