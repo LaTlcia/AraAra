@@ -86,6 +86,8 @@ export const JOB_MOTIONS = {
   PoseChange05: { intro: "S_05PoseChange", loop: "S_05PoseChangeLoop", end: "S_05PoseChangeEnd" },
   Negative:     { intro: "S_06Negative" },
   Disagree:     { intro: "S_06Negative" },
+  // 打瞌睡（犯困的情绪）：头垂下去点几下，然后惊醒。真正睡着用 JobPet.sleep()
+  Sleep:        { intro: "Sleep", loop: "SleepLoop", end: "SleepEnd" },
 };
 
 // Q 版：锁住哪些骨骼的位移（MoveJump/MoveLanding 的 Move 会甩出约 7000 单位，TR 也有上千单位的水平位移）
@@ -159,12 +161,15 @@ export class JobPet extends BasePet {
     this.mouthOpen = 0;
     this.mouthTimer = 0;
     this.scaleFactor = 1;
+    this.sleeping = false;
   }
 
   async load(costume, assetsBase) {
     const data = await loadSpine(`${assetsBase}/${costume.jobspine}`);
     const spine = new PIXI.spine.Spine(data);
     this.bounds = null;
+    this.sleeping = false;
+    this.motionName = "Base";
     this.mount(spine);
     spine.state.data.defaultMix = 0.25;
     this.setFace(this.faceName);
@@ -201,29 +206,75 @@ export class JobPet extends BasePet {
     this.faceDirty = true;
   }
 
-  // 动作：intro → loop（loopSeconds 秒）→ end → Base
+  // 动作：intro → loop（loopSeconds 秒）→ end → Base。睡着的时候先惊醒（SleepEnd）再接动作
   playMotion(name, { loopSeconds = 3.2, quiet = false } = {}) {
     if (!this.spine) return;
+    if (this.sleeping && name === "Sleep") return; // 已经睡着了，犯困不用再演
     const m = JOB_MOTIONS[name] || JOB_MOTIONS.Base;
     const st = this.spine.state;
     clearTimeout(this.motionTimer);
+    let lead = 0;
+    if (this.sleeping) {
+      this.sleeping = false;
+      st.setAnimation(0, "SleepEnd", false);
+      lead = this.animDuration("SleepEnd");
+    }
+    const start = (anim, loop) => (lead ? st.addAnimation(0, anim, loop, 0) : st.setAnimation(0, anim, loop));
     this.motionName = name;
     if (!m.intro) {
-      st.setAnimation(0, m.loop, true);
+      start(m.loop, true);
       return;
     }
-    st.setAnimation(0, m.intro, false);
+    start(m.intro, false);
     if (m.loop) {
       st.addAnimation(0, m.loop, true, 0);
-      this.motionTimer = setTimeout(() => this.endMotion(), (this.animDuration(m.intro) + loopSeconds) * 1000);
+      this.motionTimer = setTimeout(() => this.endMotion(), (lead + this.animDuration(m.intro) + loopSeconds) * 1000);
     } else {
       st.addAnimation(0, JOB_MOTIONS.Base.loop, true, 0);
-      this.motionTimer = setTimeout(() => this.emit("motionEnd", name), this.animDuration(m.intro) * 1000);
+      this.motionTimer = setTimeout(() => {
+        if (this.motionName === name) this.motionName = "Base";
+        this.emit("motionEnd", name);
+      }, (lead + this.animDuration(m.intro)) * 1000);
     }
     if (!quiet) this.emit("motion", name);
   }
 
+  // 睡着：犯困垂头 → 打几下瞌睡 → 熟睡（头靠下来不再点头，呼吸放慢），一直睡到 wake()
+  // deep = 直接熟睡（比如夜里）
+  sleep({ deep = false } = {}) {
+    if (!this.spine || this.sleeping) return;
+    clearTimeout(this.motionTimer);
+    const st = this.spine.state;
+    let entry = st.tracks[0];
+    const cur = entry?.animation?.name;
+    // 犯困的情绪动作正演到一半：接着睡下去，不从头再来（去掉排在后面的「惊醒」）
+    if (cur === "Sleep" || cur === "SleepLoop") (st.clearNext || st.disposeNext).call(st, entry);
+    else entry = st.setAnimation(0, "Sleep", false);
+    if (entry.animation.name === "Sleep") entry = st.addAnimation(0, "SleepLoop", true, 0);
+    // 在 SleepLoop 头往下沉的阶段（循环里的 1.2 秒处）开始过渡到熟睡，不会撞上点头
+    const LOOP = this.animDuration("SleepLoop");
+    const at = Math.ceil((entry.trackTime - 1.2) / LOOP) * LOOP + 1.2 + (deep ? 0 : LOOP);
+    st.addAnimation(0, "SleepDeep", true, Math.max(1.2, at)).mixDuration = 1.6;
+    this.motionName = "Sleep";
+    this.sleeping = true;
+    this.setFace("Sleep");
+  }
+
+  // 醒来：startled = 被叫醒（猛地抬头），否则是睡饱了慢慢抬头伸懒腰。返回动作时长（秒）
+  wake({ startled = true } = {}) {
+    if (!this.spine || !this.sleeping) return 0;
+    clearTimeout(this.motionTimer);
+    this.sleeping = false;
+    this.motionName = "Base";
+    const anim = startled ? "SleepEnd" : "SleepWake";
+    const st = this.spine.state;
+    st.setAnimation(0, anim, false);
+    st.addAnimation(0, JOB_MOTIONS.Base.loop, true, 0);
+    return this.animDuration(anim);
+  }
+
   endMotion() {
+    if (this.sleeping) return;
     const m = JOB_MOTIONS[this.motionName];
     if (!m || !m.end) return;
     const st = this.spine.state;
@@ -237,6 +288,7 @@ export class JobPet extends BasePet {
   // 保持当前动作的 loop 直到 release
   holdMotion() { clearTimeout(this.motionTimer); }
   releaseMotion(delay = 1.2) {
+    if (this.sleeping) return;
     clearTimeout(this.motionTimer);
     this.motionTimer = setTimeout(() => this.endMotion(), delay * 1000);
   }
@@ -373,6 +425,21 @@ export class ChibiPet extends BasePet {
 
   setFace(name) { this.face = CHIBI_FACES[name] || null; this.faceName = name; }
   setTalking(on) { this.talking = on; this.mouthTimer = 0; }
+
+  // 脸的中心（舞台坐标）。Q 版的脸是一整张贴图，躺着的时候头骨骼的位置离脸比较远
+  facePoint() {
+    const sk = this.spine.skeleton;
+    for (const name of ["001FaceMouth", "002FaceMouth"]) {
+      const slot = sk.findSlot(name);
+      const att = slot?.attachment;
+      if (!att?.computeWorldVertices) continue;
+      const v = new Float32Array(8);
+      att.computeWorldVertices(slot.bone, v, 0, 2);
+      const p = this.spine.toGlobal(new PIXI.Point((v[0] + v[4]) / 2, (v[1] + v[5]) / 2));
+      return { x: p.x, y: p.y };
+    }
+    return this.headPoint();
+  }
 
   // 定格在某个动画的某一时刻（秒）
   pose(anim, time) {

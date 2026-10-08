@@ -67,7 +67,7 @@ async function save(patch) {
   savedTimer = setTimeout(() => $("#saved").classList.remove("show"), 1200);
 }
 
-const NUMBER = new Set(["replyMaxChars", "historyTurns", "idleTalkMinutes", "apiPort", "costume", "chibiIdleSeconds", "chibiActivity", "chatAutoClose"]);
+const NUMBER = new Set(["replyMaxChars", "historyTurns", "idleTalkMinutes", "apiPort", "costume", "chibiIdleSeconds", "chibiActivity", "chatAutoClose", "sleepMinutes"]);
 document.querySelector('[name="chibiActivity"]').addEventListener("input", (e) => {
   $("#activity-value").textContent = ACTIVITY[Number(e.target.value)];
 });

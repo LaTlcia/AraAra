@@ -17,6 +17,6 @@
   "sad":      { "label": "难过",       "face": "Sad",            "motion": "Negative",     "chibi": "sit",     "manpu": "sweat",  "aliases": ["难过", "伤心", "失落"] },
   "trouble":  { "label": "困扰/无奈",  "face": "Trouble",        "motion": "Think",        "chibi": "idle",    "manpu": "sweat",  "aliases": ["困扰", "无奈", "为难"] },
   "bored":    { "label": "无聊",       "face": "Ennui",          "motion": "PoseChange04", "chibi": "sit",     "manpu": "dots",   "aliases": ["无聊", "厌倦"] },
-  "sleepy":   { "label": "困倦",       "face": "Sleep",          "motion": "Base",         "chibi": "sit",     "manpu": "zzz",    "aliases": ["困", "困倦", "睡"] },
+  "sleepy":   { "label": "困倦",       "face": "Sleep",          "motion": "Sleep",        "chibi": "doze",    "manpu": "zzz",    "aliases": ["困", "困倦", "睡"] },
   "gentle":   { "label": "温柔安心",   "face": "Close",          "motion": "Positive",     "chibi": "idle",    "manpu": null,     "aliases": ["温柔", "安心"] }
 }

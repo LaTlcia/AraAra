@@ -1,18 +1,19 @@
-// Q 版的自主活动：没人理她的时候自己小跑、冲刺、蹦跳、跳舞、坐下、打瞌睡、东张西望、自言自语。
+// Q 版的自主活动：没人理她的时候自己小跑、冲刺、蹦跳、跳舞、坐下、东张西望、自言自语。
 // 每个动作是一个可中断的 async 函数；点她、拖她、开对话框都会立刻打断。
+// 睡觉（搬出小床、盖被子）也在这里演，什么时候睡、什么时候醒由 pet.js 决定。
 
 const CANCEL = Symbol("cancel");
 
 // 庆祝 / 跳舞用的胜利动作（tools/build-assets.mjs 里保留的那些）
-const DANCES = ["Victory01", "Victory04", "Victory05", "Victory06", "Victory12", "Victory13", "Victory18",
+const DANCES = ["Victory01", "Victory04", "Victory05", "Victory06", "Victory12", "Victory13", "Victory17", "Victory18",
   "Victory26", "Victory38", "Victory42", "Victory49", "Victory57", "Victory71", "MpRecover", "WaitAprilFool"];
 
 // 活跃程度 1~4：两次动作之间的间隔（秒）与各动作的权重
 const LEVELS = {
-  1: { gap: [14, 28], w: { walk: 3, dash: 0, hop: 1, dance: 1, sit: 3, sleep: 2, look: 2, talk: 1 } },
-  2: { gap: [7, 15], w: { walk: 4, dash: 1, hop: 2, dance: 2, sit: 2, sleep: 1, look: 2, talk: 1 } },
-  3: { gap: [3.5, 8], w: { walk: 4, dash: 2, hop: 3, dance: 3, sit: 1, sleep: 0.3, look: 2, talk: 1.5 } },
-  4: { gap: [1.5, 4], w: { walk: 3, dash: 4, hop: 4, dance: 4, sit: 0.5, sleep: 0, look: 1, talk: 2 } },
+  1: { gap: [14, 28], w: { walk: 3, dash: 0, hop: 1, dance: 1, sit: 3, look: 2, talk: 1 } },
+  2: { gap: [7, 15], w: { walk: 4, dash: 1, hop: 2, dance: 2, sit: 2, look: 2, talk: 1 } },
+  3: { gap: [3.5, 8], w: { walk: 4, dash: 2, hop: 3, dance: 3, sit: 1, look: 2, talk: 1.5 } },
+  4: { gap: [1.5, 4], w: { walk: 3, dash: 4, hop: 4, dance: 4, sit: 0.5, look: 1, talk: 2 } },
 };
 
 // 跳跃相关姿势（根骨骼位移已在 ChibiPet 里锁住）：
@@ -27,9 +28,10 @@ const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 export class ChibiBrain {
   /**
    * ctx: {
-   *   pet(): 当前 ChibiPet，settings(): 当前设置，api: preload API，
+   *   pet(): 当前 ChibiPet，settings(): 当前设置，api: preload API，bed: 小床（bed.js），
    *   busy(): 正在说话 / 开着对话框 / 拖动中，idleMs(): 距离上次互动的毫秒数，
-   *   say(text), manpu(kind, ms), face(name), line(kind), isNight()
+   *   say(text), manpu(kind, ms), line(kind), isNight(),
+   *   deepSleep(): 这一觉是不是熟睡（夜里 / 被哄睡），shouldWake(): 睡够了没有（白天的小盹）
    * }
    */
   constructor(ctx) {
@@ -49,7 +51,7 @@ export class ChibiBrain {
   // ---------------- 生命周期 ----------------
   // 载入 / 切换形态 / 被放下：开启下落就掉到屏幕底部，否则停在原地
   reset({ dropped = false } = {}) {
-    this.interrupt(dropped ? "drag" : "");
+    this.interrupt(dropped ? "drag" : "reset");
     this.timer = 3;
     this.run("fall", async () => {
       if (this.ctx.settings().chibiFall !== false) return this.fallToGround();
@@ -67,26 +69,39 @@ export class ChibiBrain {
     pet.setFace("Surprise");
   }
 
-  // 被打断（点击、拖动、对话、AI 情绪）
+  // 被打断（点击、拖动、对话、AI 情绪；reset = 换衣服 / 换大小后重新落地）
+  // 在床上的时候：被拎走、重置就直接收起床；其余情况掀开被子起床（情绪动作自己会先起床）
   interrupt(reason = "") {
-    const wasSleeping = this.sleeping;
+    const bed = this.ctx.bed;
+    const inBed = bed?.shown;
+    const hard = reason === "drag" || reason === "reset";
+    if (this.action === "wake" && !hard) return; // 正在起床，让她起完
     if (this.token) this.token.cancelled = true;
     this.token = null;
     this.action = null;
     if (this.motion) { this.motion.reject?.(CANCEL); this.motion = null; }
     this.sleeping = false;
-    const pet = this.pet;
-    if (pet?.spine && pet.kind === "chibi") {
-      pet.spine.state.timeScale = 1;
-      if (reason !== "emote") pet.setFace("Normal"); // 情绪动作自己带表情
-      if (reason === "click" && wasSleeping) {
-        pet.play("recover", false, "idle");
-        this.ctx.say(this.ctx.line("chibiWake"));
-      } else if (reason !== "emote" && reason !== "drag") {
-        pet.play("idle", true);
-      }
-    }
     this.timer = Math.max(this.timer, 4);
+    const pet = this.pet;
+    if (!pet?.spine || pet.kind !== "chibi") return;
+    pet.spine.state.timeScale = 1;
+    if (inBed && hard) bed.hide(reason === "reset");
+    if (inBed && !hard && reason !== "emote") {
+      this.run("wake", () => this.getUp({ startled: true }));
+      return;
+    }
+    if (reason !== "emote") pet.setFace("Normal"); // 情绪动作自己带表情
+    if (reason !== "emote" && reason !== "drag") pet.play("idle", true);
+  }
+
+  // 床摆出来了（睡着、正在上床或者正在起床）
+  get inBed() { return Boolean(this.ctx.bed?.shown); }
+
+  // 去睡觉（犯困了，或者菜单里「哄她睡觉」）
+  goToSleep() {
+    if (this.inBed || this.action === "sleep" || this.action === "wake") return;
+    this.interrupt("sleep");
+    this.run("sleep", () => this.sleep());
   }
 
   // ---------------- 每帧 ----------------
@@ -127,12 +142,7 @@ export class ChibiBrain {
 
   choose(level, idle) {
     const s = this.ctx.settings();
-    const entries = Object.entries(level.w).filter(([k, w]) => {
-      if (!w || !this.allowed(k)) return false;
-      // 打瞌睡：深夜，或者已经很久没人理她
-      if (k === "sleep") return this.ctx.isNight() || idle > (Number(s.chibiIdleSeconds) || 0) + 180;
-      return true;
-    });
+    const entries = Object.entries(level.w).filter(([k, w]) => w && this.allowed(k));
     const total = entries.reduce((n, [, w]) => n + w, 0);
     let r = Math.random() * total;
     for (const [k, w] of entries) { if ((r -= w) <= 0) return k; }
@@ -158,6 +168,7 @@ export class ChibiBrain {
         this.token = null;
         this.action = null;
         this.sleeping = false;
+        if (name === "sleep" || name === "wake") this.ctx.bed?.hide(); // 出错时也别把床留在那里
         const pet = this.pet;
         if (pet?.kind === "chibi" && pet.spine) pet.spine.state.timeScale = 1;
         this.ctx.api.savePosition();
@@ -322,36 +333,69 @@ export class ChibiBrain {
     this.pet.setFace("Normal");
   }
 
-  // 坐下休息：坐到地上，或者趴着
-  async sit() {
-    const sec = rand(6, 16);
-    if (Math.random() < 0.6) {
-      await this.play("Victory17");               // 坐到地上（结尾停在坐姿）
-      if (Math.random() < 0.3) this.ctx.manpu("note", 2000);
-      await this.wait(sec);
-      this.idle();
-    } else {
-      await this.play("RestActive", { then: "RestLoop" });
-      await this.wait(sec);
-      await this.play("RestRecover", { then: "WaitDefault" });
-    }
+  // 坐下休息：侧坐在地上歇一会儿
+  async sit(sec = rand(6, 16)) {
+    await this.play("RestActive", { then: "RestLoop" });
+    if (Math.random() < 0.3) this.ctx.manpu("note", 2000);
+    await this.wait(sec);
+    await this.play("RestRecover", { then: "WaitDefault" });
   }
 
-  // 打瞌睡：躺下、闭眼、冒 Zzz；点她会被吵醒
-  async sleep() {
+  // 犯困（醒着时的「困倦」情绪）：坐下来闭着眼睛点几下头
+  async doze() {
+    await this.play("RestActive", { then: "RestLoop" });
     this.pet.setFace("Close");
-    await this.play("DeathActive", { then: "DeathLoop" });
-    this.sleeping = true;
-    const end = performance.now() + rand(15, 40) * 1000;
-    while (performance.now() < end) {
-      this.ctx.manpu("zzz", 3000);
-      await this.wait(3.2);
-    }
-    this.sleeping = false;
-    await this.play("DeathRecover", { then: "WaitDefault" });
+    this.ctx.manpu("zzz", 3600);
+    await this.wait(4);
     this.pet.setFace("Normal");
-    if (Math.random() < 0.5) this.ctx.say(this.ctx.line("chibiWakeSelf"));
+    await this.play("RestRecover", { then: "WaitDefault" });
   }
+
+  // 睡觉：搬出小床 → 跳上床、盖好被子 → 一直睡到 ctx.shouldWake()（夜里 / 被哄睡时只有被叫醒才起来）→ 自己起床
+  async sleep() {
+    const pet = this.pet, bed = this.ctx.bed, st = pet.spine.state;
+    bed.setInBed(false);
+    bed.coverUp(false);
+    bed.show();
+    pet.setFace("Smile");
+    await this.wait(0.5);                                  // 床出现
+    st.setAnimation(0, "SleepIntro", false);
+    const loop = st.addAnimation(0, "SleepLoop", true, 0);
+    loop.timeScale = this.ctx.deepSleep() ? 0.75 : 1;      // 熟睡时呼吸慢一点
+    await this.wait(0.56);                                 // 跳到半空，脚已经高过床垫
+    bed.setInBed(true);
+    await this.wait(Math.max(0.1, this.anim("SleepIntro") - 0.56));
+    pet.setFace("Sleep");
+    bed.coverUp(true);
+    this.sleeping = true;
+    while (!this.ctx.shouldWake()) await this.wait(1);
+    await this.getUp();
+  }
+
+  // 起床：掀开被子 → 坐起来跳下床 → 收起床。startled = 被叫醒（表情交给叫醒时说的那句话）
+  async getUp({ startled = false } = {}) {
+    const pet = this.pet, bed = this.ctx.bed, st = pet.spine.state;
+    this.sleeping = false;
+    bed.coverUp(false);
+    if (!startled) pet.setFace("Normal");
+    else if (pet.faceName === "Sleep") pet.setFace("Surprise");
+    await this.wait(startled ? 0.15 : 0.6);
+    if (!bed.inBed) {                                      // 还没躺进去就被叫住了
+      bed.hide();
+      this.idle();
+      return;
+    }
+    st.setAnimation(0, "SleepWake", false);
+    st.addAnimation(0, "WaitDefault", true, 0);
+    await this.wait(0.1);                                  // 坐起来，脚要从床沿前面荡下来了
+    bed.setInBed(false);
+    await this.wait(Math.max(0.1, this.anim("SleepWake") - 0.1));
+    bed.hide();
+    await this.wait(0.35);
+    if (pet.faceName === "Surprise" || pet.faceName === "Sleep") pet.setFace("Normal");
+  }
+
+  anim(name) { return this.pet.spine.spineData.findAnimation(name)?.duration || 1; }
 
   // 东张西望
   async look() {
@@ -370,20 +414,21 @@ export class ChibiBrain {
   }
 
   // AI 情绪标签 / 菜单里的「表演情绪」触发的一次性动作
+  // 在床上的时候：犯困就接着睡；别的情绪先起床再演
   async emote(kind) {
     if (kind === "idle") return;
+    const inBed = this.inBed;
+    if (kind === "doze" && inBed) return;
     this.interrupt("emote");
     const map = {
       victory: "Victory42", cheer: "Victory01", pose: "Victory13", spin: "Victory26", hurt: "DamageSword",
     };
     await this.run(`emote:${kind}`, async () => {
+      if (inBed) await this.getUp({ startled: true });
       switch (kind) {
         case "jump": await this.hop(); break;
-        case "sit":
-          await this.play("Victory17");
-          await this.wait(6);
-          this.idle();
-          break;
+        case "sit": await this.sit(6); break;
+        case "doze": await this.doze(); break;
         case "faint":
           await this.play("DeathActive", { then: "DeathLoop" });
           await this.wait(2.2);

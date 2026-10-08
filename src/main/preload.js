@@ -18,6 +18,7 @@ contextBridge.exposeInMainWorld("pet", {
   menu: () => ipcRenderer.send("pet:menu"),
   openSettings: (tab) => ipcRenderer.send("pet:openSettings", tab),
   focus: () => ipcRenderer.send("pet:focus"),
+  sleepState: (on) => ipcRenderer.send("pet:sleepState", Boolean(on)),
   externalChatDone: (result) => ipcRenderer.send("pet:externalChatDone", result),
 
   chatSend: (input) => ipcRenderer.invoke("chat:send", input),
@@ -34,6 +35,7 @@ contextBridge.exposeInMainWorld("pet", {
   onEmote: on("pet:emote"),
   onSay: on("pet:say"),
   onOpenChat: on("pet:openChat"),
+  onSleep: on("pet:sleep"),
   onExternalChat: on("pet:externalChat"),
   onSettings: on("settings:changed"),
   onSettingsTab: on("settings:tab"),

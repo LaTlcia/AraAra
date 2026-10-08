@@ -3,6 +3,8 @@ import { createApp, JobPet, ChibiPet } from "./stage.js";
 import { TagStream, parseLine, Manpu } from "./emotion.js";
 import * as R from "./reactions.js";
 import { ChibiBrain } from "./chibi-brain.js";
+import { Bed } from "./bed.js";
+import { SleepFx } from "./sleep-fx.js";
 
 const ASSETS = "../../assets";
 const api = window.pet || (await import("./dev-shim.js")).default;
@@ -24,6 +26,8 @@ let ui = 1;                 // 界面缩放（气泡、按钮、输入框），�
 
 const app = createApp(stageEl);
 const manpu = new Manpu($("#manpu"));
+const bed = new Bed(app);            // Q 版睡觉用的小床
+const sleepFx = new SleepFx($("#manpu"));
 let pet = null;
 let anchor = null;          // 角色在窗口里的位置（布局时计算）
 let lastInteraction = Date.now();
@@ -80,6 +84,8 @@ async function loadPet() {
     pet = new Kind(app);
   }
   await pet.load(costume, ASSETS);
+  if (pet.kind === "chibi") bed.attach(pet.spine);
+  else bed.detach();
   layout();
   if (pet.kind === "chibi") brain.reset();
   else brain.interrupt();
@@ -102,13 +108,16 @@ function manpuPoint() {
 function perform(tag, { speaking = false, hold = 0 } = {}) {
   const e = EMOTIONS[tag];
   if (!e || !pet?.spine) return;
+  // 睡着时「困倦」（梦话）不会吵醒她；其它情绪会（立绘先惊醒再做动作，Q 版先起床）
+  if (tag === "sleepy" && inSleepMode()) return;
   currentEmotion = tag;
   clearTimeout(restTimer);
   pet.setFace(e.face);
   if (pet.kind === "job") {
     if (e.motion !== "Base" || pet.motionName !== "Base") pet.playMotion(e.motion, { loopSeconds: hold || 2.6 });
     if (speaking) pet.holdMotion();
-  } else {
+  } else if (!drag) {
+    // 被鼠标拎着的时候只换表情：情绪动作会让她自己跳起来、落地，和拖动抢窗口位置
     brain.emote(e.chibi);
   }
   manpu.show(e.manpu, manpuPoint(), speaking ? 3200 : 2400);
@@ -119,6 +128,7 @@ function scheduleRest(ms) {
   clearTimeout(restTimer);
   restTimer = setTimeout(() => {
     if (speaker.active && !speaker.el.hidden && speaker.typingTimer) return scheduleRest(2000);
+    if (sleepingNow()) return;
     currentEmotion = "normal";
     pet?.setFace(R.isNight() ? "HalfEye_Normal" : "Normal");
   }, ms);
@@ -283,6 +293,8 @@ function desktopLines(extra = []) {
     `你现在穿着：${c.nameZh}（${c.name}）`,
     `你现在的样子：${settings.mode === "job" ? "立绘" : "Q 版小人（在桌面底部走来走去）"}`,
     ...(pet?.kind === "chibi" && brain.action ? [`你刚才在做的事：${R.CHIBI_ACTION_NAMES[brain.action.replace(/^emote:/, "")] || "活动"}`] : []),
+    ...(nap.wokeAt && Date.now() - nap.wokeAt < 180000
+      ? [nap.wokeBy === "user" ? "你刚才在睡觉，被主人叫醒了" : "你刚刚睡醒"] : []),
     `你刚才的情绪：${EMOTIONS[currentEmotion]?.label || "平静"}`,
     ...extra,
   ];
@@ -366,6 +378,7 @@ function openChat() {
   wardrobeEl.hidden = true;
   chatbar.hidden = false;
   lastInteraction = Date.now();
+  wakeUp("chat");
   if (pet?.kind === "chibi") brain.interrupt();
   api.ensureVisible();
   setInteractive(true);
@@ -550,7 +563,9 @@ document.addEventListener("mousemove", (e) => {
       if (pat.flips.length >= 6 && now > pat.cooldown) {
         pat.flips = [];
         pat.cooldown = now + 4000;
-        interact("petting");
+        // 睡着的时候轻轻摸头不会吵醒她，只会在梦里嘟囔一句
+        if (sleepingNow()) { lastInteraction = Date.now(); if (!speaker.active) say(R.line("sleepPat")); }
+        else interact("petting");
       }
     }
   });
@@ -576,6 +591,7 @@ stageEl.addEventListener("pointermove", (e) => {
   if (!drag.moved && Math.hypot(dx, dy) > 5) {
     drag.moved = true;
     document.body.classList.add("dragging");
+    if (inSleepMode()) nap.wokeBy = "user";
     brain.interrupt("drag");
     interact("dragStart");
     if (pet.kind === "chibi") brain.carry();
@@ -601,11 +617,9 @@ stageEl.addEventListener("pointerup", (e) => {
     return;
   }
   const region = regionAt(d.x, d.y);
-  if (pet.kind === "chibi") {
-    // 睡着的时候点她：吵醒，不再接普通台词
-    if (brain.sleeping) { lastInteraction = Date.now(); brain.interrupt("click"); return; }
-    brain.emote(region === "head" ? "jump" : "hurt");
-  }
+  // 睡着的时候点她：叫醒，不再接普通台词
+  if (wakeUp("click")) return;
+  if (pet.kind === "chibi") brain.emote(region === "head" ? "jump" : "hurt");
   interact({ head: "patHead", face: "pokeCheek", body: "pokeBody", legs: "pokeLegs" }[region]);
 });
 
@@ -650,14 +664,150 @@ const brain = new ChibiBrain({
   pet: () => pet,
   settings: () => settings,
   api,
+  bed,
   busy: () => Boolean(drag) || speaker.active || chatTyping() || !wardrobeEl.hidden || chatState.busy,
   idleMs: () => Date.now() - lastInteraction,
   say: (text) => say(text),
   manpu: (kind, ms) => manpu.show(kind, manpuPoint(), ms),
   line: (kind) => R.line(kind),
   isNight: () => R.isNight(),
+  deepSleep: () => nap.deep,
+  shouldWake: () => napOver(),
 });
-app.ticker.add(() => brain.tick(app.ticker.deltaMS / 1000));
+
+// ============================================================
+// 睡觉：很久没理她就会犯困睡着 —— 立绘站着打盹，Q 版搬出小床、盖好被子睡。
+// 白天打个盹会自己醒；晚上（22 点～早上 6 点）睡着、或者被「哄睡」的话睡得更沉，一直睡到被叫醒。
+// 点她、拖她、打开对话框会把她叫醒；在头上轻轻摸不会。
+// ============================================================
+const bedtime = (d = new Date()) => d.getHours() >= 22 || d.getHours() < 6;
+const nap = {
+  deep: false,    // 熟睡：只有被叫醒才起来
+  night: false,   // 晚上睡的（醒来时说早安）
+  until: 0,       // 白天的小盹睡到什么时候
+  talkAt: 0,      // 下一句梦话
+  wokeAt: 0,      // 上次醒来的时间
+  wokeBy: "",     // "user" = 被叫醒
+  selfWake: false, // 睡饱了自己醒的（醒来后说句话）
+};
+// 睡着了（立绘在打盹 / Q 版躺在床上）
+const sleepingNow = () => Boolean(pet?.spine) && (pet.kind === "job" ? pet.sleeping : brain.sleeping);
+// 睡着了或者正在上床
+const inSleepMode = () => Boolean(pet?.spine) && (pet.kind === "job" ? pet.sleeping : brain.action === "sleep");
+
+function fallAsleep({ manual = false } = {}) {
+  if (!pet?.spine || inSleepMode() || drag) return;
+  nap.night = bedtime();
+  nap.deep = manual || nap.night;
+  nap.until = nap.deep ? Infinity : Date.now() + (4 + Math.random() * 4) * 60000;
+  nap.talkAt = Date.now() + (1.5 + Math.random() * 2) * 60000;
+  nap.wokeBy = "";
+  nap.selfWake = false;
+  wardrobeEl.hidden = true;
+  if (manual) {
+    if (chatState.busy) api.chatAbort(); // 不然后面的回复会把她叫醒
+    closeChat();
+  }
+  if (pet.kind === "job") pet.sleep({ deep: nap.deep });
+  else brain.goToSleep();
+  say(R.line(nap.night ? "goodnight" : manual ? "tuckIn" : "fallAsleep"), { force: true });
+}
+
+// 叫醒她；返回是不是真的叫醒了
+function wakeUp(by) {
+  if (!inSleepMode()) return false;
+  const wasAsleep = sleepingNow();
+  nap.wokeBy = "user";
+  lastInteraction = Date.now();
+  pendingEvents.push("把正在睡觉的你叫醒了");
+  if (pet.kind === "chibi") brain.interrupt("click");
+  // 立绘：台词的情绪动作会先演「惊醒」再接上（JobPet.playMotion）
+  else pet.setFace("Surprise");
+  if (wasAsleep) say(wakeLine(), { force: true });
+  else if (pet.kind === "job") pet.wake({ startled: true });
+  return true;
+}
+
+function wakeLine() {
+  const h = new Date().getHours();
+  if (nap.night && h >= 6 && h < 12) return R.line("wakeMorning");
+  if (bedtime()) return R.line("wakeNight");
+  return R.line("wake");
+}
+
+// 白天的小盹睡够了没有（打着盹到了晚上就干脆一直睡下去）
+function napOver() {
+  if (nap.deep) return false;
+  if (bedtime()) { nap.deep = nap.night = true; return false; }
+  if (Date.now() < nap.until) return false;
+  nap.selfWake = true;
+  return true;
+}
+
+// 立绘睡饱了：慢慢抬起头伸个懒腰（Q 版的起床在 chibi-brain.js）
+function wakeSelf() {
+  pet.wake({ startled: false });
+  pet.setFace("Close");
+  setTimeout(() => { if (!sleepingNow() && pet?.kind === "job") pet.setFace("HalfEye_Normal"); }, 900);
+}
+
+// 犯困：很久没理她（晚上一半的时间就困了）；正在说话、对话、拖动、换衣服的时候不睡
+setInterval(() => {
+  if (!pet?.spine) return;
+  if (sleepingNow()) {
+    if (pet.kind === "job" && napOver()) return wakeSelf();
+    // 白天打盹偶尔说句梦话；晚上安安静静地睡
+    if (!nap.deep && Date.now() >= nap.talkAt && !speaker.active && !chatState.busy) {
+      nap.talkAt = Date.now() + (2 + Math.random() * 3) * 60000;
+      say(R.line("sleepTalk"));
+    }
+    return;
+  }
+  const min = Number(settings.sleepMinutes) || 0;
+  if (!min || inSleepMode() || drag || speaker.active || chatState.busy || !chatbar.hidden || !wardrobeEl.hidden) return;
+  if (pet.kind === "job" ? pet.motionName !== "Base" : brain.action) return;
+  const quiet = Date.now() - Math.max(lastInteraction, nap.wokeAt);
+  if (quiet >= (bedtime() ? min / 2 : min) * 60000) fallAsleep();
+}, 10000);
+
+api.onSleep?.((on) => (on ? fallAsleep({ manual: true }) : wakeUp("menu")));
+
+// 每帧：Q 版自主活动、Zzz、被子跟着呼吸起伏
+let wasSleeping = false;
+app.ticker.add(() => {
+  const dt = app.ticker.deltaMS / 1000;
+  brain.tick(dt);
+  const z = sleepingNow();
+  if (z !== wasSleeping) {
+    wasSleeping = z;
+    if (z) sleepFx.start();
+    else {
+      sleepFx.stop();
+      nap.wokeAt = Date.now();
+      // 睡饱了自己醒的：起来以后伸个懒腰说句话
+      if (nap.selfWake) {
+        nap.selfWake = false;
+        setTimeout(() => {
+          if (sleepingNow() || speaker.active || chatState.busy) return;
+          if (Math.random() < 0.6) say(R.line("wakeSelf"));
+          else scheduleRest(400);
+        }, 2300);
+      }
+    }
+    api.sleepState?.(z);
+  }
+  if (z) {
+    const charH = stageEl.clientHeight;
+    const p = pet.kind === "job"
+      ? manpuPoint()
+      : (() => { const f = toWindow(pet.facePoint()); return { x: f.x + pet.facing * charH * 0.05, y: f.y - charH * 0.14 }; })();
+    sleepFx.update(Math.min(dt, 0.2), p, { dir: pet.kind === "chibi" ? pet.facing || 1 : 1, calm: nap.deep });
+  }
+  if (pet?.kind === "chibi" && pet.spine && bed.shown) {
+    const e = pet.spine.state.tracks[0];
+    bed.breath = e?.animation?.name === "SleepLoop" ? (1 - Math.cos(Math.PI * e.trackTime)) / 2 : 0;
+  }
+});
 
 // ============================================================
 // 闲置：太久没理她
@@ -666,7 +816,7 @@ let lastIdleTalk = Date.now();
 setInterval(() => {
   const idleMin = (Date.now() - lastInteraction) / 60000;
   const sinceTalk = (Date.now() - lastIdleTalk) / 60000;
-  if (speaker.active || chatState.busy || !chatbar.hidden) return;
+  if (speaker.active || chatState.busy || !chatbar.hidden || inSleepMode()) return;
   const aiIdle = Number(settings.idleTalkMinutes) || 0;
   if (aiIdle > 0 && settings.chatReady && idleMin >= aiIdle && sinceTalk >= aiIdle) {
     lastIdleTalk = Date.now();
@@ -718,4 +868,4 @@ new MutationObserver(touchWardrobe).observe(wardrobeEl, { attributes: true, attr
 // ============================================================
 await loadPet();
 setTimeout(() => say(R.greetLine()), 500);
-window.__araya = { pet: () => pet, perform, say, sendChat, app, brain, openChat, closeChat };
+window.__araya = { pet: () => pet, perform, say, sendChat, app, brain, bed, openChat, closeChat, fallAsleep, wakeUp, nap };

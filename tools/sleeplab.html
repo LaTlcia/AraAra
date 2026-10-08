@@ -1,0 +1,77 @@
+<!doctype html>
+<!-- 开发用：睡觉动作调试页（动作由 sleep-anim.mjs 现场生成，raw=1 则直接用 skeleton.json 里已有的）。
+     ?kind=job|chibi&anim=名字,名字&t=0,0.5,1&c=服装id&face=Sleep&scale=倍数&w=&h=&once=1&focus=head&bed=1|noblanket -->
+<html><head><meta charset="utf-8"><title>Sleep Lab</title>
+<script src="../node_modules/pixi.js/dist/browser/pixi.min.js"></script>
+<script src="../node_modules/pixi-spine/dist/pixi-spine.umd.js"></script>
+<style>body{margin:0;background:#e9e2ec;font:11px sans-serif}#g{display:flex;flex-wrap:wrap;gap:3px;padding:4px}figure{margin:0;background:#fff;text-align:center;border-radius:4px}figure img{display:block}</style>
+</head><body><div id="g"></div>
+<script type="module">
+import { loadSpineWithAtlas, JobPet, ChibiPet } from "../src/renderer/stage.js";
+import { addSleepAnimations } from "./sleep-anim.mjs";
+import { Bed } from "../src/renderer/bed.js";
+const q = new URLSearchParams(location.search);
+const kind = q.get("kind") || "job";
+const costume = q.get("c") || "1042";
+const times = (q.get("t") || "0").split(",").map(Number);
+const anims = (q.get("anim") || "01BaseLoop").split(",");
+const W = Number(q.get("w") || (kind === "job" ? 200 : 180)), H = Number(q.get("h") || (kind === "job" ? 330 : 200));
+const app = new PIXI.Application({ width: W, height: H, backgroundAlpha: 0, preserveDrawingBuffer: true, antialias: true });
+const skelUrl = kind === "job" ? `../assets/jobspine/${costume}/skeleton.json` : "../assets/chibi/skeleton.json";
+const json = await (await fetch(skelUrl, { cache: "no-store" })).json();
+if (!q.has("raw")) addSleepAnimations(json, kind);
+const blob = URL.createObjectURL(new Blob([JSON.stringify(json)], { type: "application/json" }));
+const loader = new PIXI.Loader();
+const atlas = `../assets/${kind === "job" ? "jobspine" : "chibi"}/${costume}/skeleton.atlas`;
+const atlasDir = atlas.slice(0, atlas.lastIndexOf("/") + 1);
+const imageLoader = () => (page, cb) => { const t = PIXI.BaseTexture.from(atlasDir + page); t.valid ? cb(t) : t.once("loaded", () => cb(t)); };
+loader.add("s", blob, { xhrType: "json", metadata: { spineAtlasFile: atlas, imageLoader } });
+const data = await new Promise((res) => loader.load((_, r) => res(r.s.spineData)));
+const Pet = kind === "job" ? JobPet : ChibiPet;
+const pet = new Pet(app);
+const spine = new PIXI.spine.Spine(data);
+pet.mount(spine);
+spine.autoUpdate = false;
+if (kind === "chibi") ["WeaponDummy","WeaponDummy2","WeaponDual","WeaponDual2","HairTail_Top","HairTail_LeftUpper","HairTail_RightUpper","HairTail_LeftBottom","HairTail_RightBottom"].forEach((s) => spine.skeleton.findSlot(s)?.setAttachment(null));
+pet.hair = [];
+if (kind === "job") { pet.blink.next = 1e9; }
+pet.setFace(q.get("face") || "Normal");
+pet.bounds = null; pet.layout(Number(q.get("scale") || 1));
+// focus=head：放大并把脸放到画面上方中间（姿势固定在第一帧时的位置，方便对比各帧的头部动作）
+const focus = q.get("focus");
+function refocus() {
+  if (!focus) return;
+  const bone = spine.skeleton.findBone(kind === "job" ? "FaceFront" : "Head");
+  spine.state.clearTracks(); spine.skeleton.setToSetupPose(); spine.update(0);
+  const p = spine.toGlobal(new PIXI.Point(bone.worldX, bone.worldY));
+  spine.x += W / 2 - p.x; spine.y += H * (kind === "job" ? 0.42 : 0.45) - p.y;
+}
+refocus();
+let bed = null;
+if (q.has("bed") && kind === "chibi") {
+  bed = new Bed(app);
+  bed.attach(spine);
+  bed.alpha = bed.target = 1;
+  bed.blanketAlpha = bed.blanketTarget = q.get("bed") === "noblanket" ? 0 : 1;
+}
+function syncBed() {
+  if (!bed) return;
+  for (const [k, s] of Object.entries(bed.layers)) { s.visible = k !== "blanket" || bed.blanketAlpha > 0; s.alpha = 1; }
+  bed.sync();
+}
+const g = document.getElementById("g");
+for (const name of anims) {
+  const anim = data.findAnimation(name);
+  if (!anim) { g.insertAdjacentHTML("beforeend", `<figure>没有 ${name}</figure>`); continue; }
+  for (const t of times) {
+    spine.state.clearTracks(); spine.skeleton.setToSetupPose();
+    spine.state.setAnimation(0, name, !q.has("once"));
+    spine.update(Math.min(t, anim.duration - 1e-4));
+    syncBed();
+    app.renderer.render(app.stage);
+    g.insertAdjacentHTML("beforeend", `<figure><img src="${app.view.toDataURL()}" style="width:${W}px"><figcaption>${name} ${t}s</figcaption></figure>`);
+  }
+}
+window.lab = { app, pet, spine, data, json, bed };
+document.title = "ready";
+</script></body></html>

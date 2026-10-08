@@ -8,7 +8,8 @@ let settings = {
   costume: Number(q.get("costume")) || 1042, mode: q.get("mode") || "job", scale: 1,
   chibiAuto: true, chibiIdleSeconds: Number(q.get("idle") ?? 60), chibiActivity: Number(q.get("activity")) || 2,
   chibiFall: q.get("fall") !== "0", chatAutoClose: Number(q.get("autoclose") ?? 30),
-  chibiActions: { walk: true, dash: true, hop: true, dance: true, sit: true, sleep: true, look: true, talk: true },
+  chibiActions: { walk: true, dash: true, hop: true, dance: true, sit: true, look: true, talk: true },
+  sleepMinutes: Number(q.get("sleep") ?? 10),
   baseUrl: "", model: "",
   hasApiKey: true, chatReady: true, aiInteractions: false, idleTalkMinutes: 0, userName: "主人",
 };
@@ -40,6 +41,7 @@ export default {
   menu() { console.log("[dev] menu"); },
   openSettings() {},
   focus() {},
+  sleepState(on) { console.log("[dev] sleeping", on); },
   externalChatDone() {},
   async chatSend({ text }) {
     const id = ++seq;
@@ -66,6 +68,7 @@ export default {
   onEmote: on("emote"),
   onSay: on("say"),
   onOpenChat: on("openChat"),
+  onSleep: on("sleep"),
   onExternalChat: on("externalChat"),
   onSettings: on("settings"),
   onSettingsTab: on("tab"),

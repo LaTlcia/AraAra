@@ -1,7 +1,7 @@
 {
-  "_comment": "窗口尺寸：角色高度 = charHeight × scale；窗口宽 = max(minWidth × ui, 角色高 × widthRatio)；窗口高 = 角色高 + topReserve × ui（头顶留给气泡）。ui = clamp(√scale, uiMin, uiMax)，控制气泡、按钮、输入框的大小。",
+  "_comment": "窗口尺寸：角色高度 = charHeight × scale；窗口宽 = max(minWidth × ui, 角色高 × widthRatio)；窗口高 = 角色高 + topReserve × ui（头顶留给气泡）。ui = clamp(√scale, uiMin, uiMax)，控制气泡、按钮、输入框的大小。Q 版的 widthRatio 要放得下睡觉用的小床（床宽最多约为角色高的 1.47 倍）。",
   "job":   { "charHeight": 330, "minWidth": 300, "widthRatio": 0.62, "topReserve": 175 },
-  "chibi": { "charHeight": 200, "minWidth": 280, "widthRatio": 0.85, "topReserve": 140 },
+  "chibi": { "charHeight": 200, "minWidth": 280, "widthRatio": 1.5, "topReserve": 140 },
   "scaleMin": 0.5,
   "scaleMax": 2,
   "uiMin": 0.85,

@@ -24,6 +24,7 @@ protocol.registerSchemesAsPrivileged([
 if (!app.requestSingleInstanceLock()) app.quit();
 
 let settings, chat, petWin, settingsWin, tray, emotionServer, netSession;
+let petSleeping = false;   // 渲染进程报告的睡觉状态（菜单显示「哄她睡觉 / 叫醒她」）
 // 桌宠窗口「应该」的尺寸（DIP）。Windows 在 125%/150% 这类非整数缩放下，getSize() 读回来的尺寸带舍入误差，
 // 移动时如果读回再写入，误差会累积，拖着拖着窗口就越来越大。所以尺寸只认这里，移动时不读回。
 let petSize = null;
@@ -211,6 +212,7 @@ function buildMenu() {
         { label: "在设置里自由调节…", click: () => openSettings("look") },
       ],
     },
+    { label: petSleeping ? "叫醒她" : "哄她睡觉", click: () => send("pet:sleep", !petSleeping) },
     {
       label: "表演情绪",
       submenu: Object.entries(EMOTIONS).filter(([k]) => !k.startsWith("_")).map(([k, v]) => ({
@@ -316,6 +318,7 @@ function registerIpc() {
     return screen.getDisplayNearestPoint({ x: b.x + b.width / 2, y: b.y + b.height / 2 }).workArea;
   });
   ipcMain.on("pet:menu", () => buildMenu().popup({ window: petWin }));
+  ipcMain.on("pet:sleepState", (_, on) => { petSleeping = Boolean(on); refreshTray(); });
   ipcMain.on("pet:openSettings", (_, tab) => openSettings(tab));
   ipcMain.on("pet:focus", () => {
     if (process.platform === "darwin") app.focus({ steal: true });

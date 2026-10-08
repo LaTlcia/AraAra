@@ -95,14 +95,52 @@ export const LINES = {
     "[sleepy]呼啊……屏幕的光暖暖的，好想睡……",
     "[gentle]夜深了呢。你还不睡的话，我就再陪你一会儿。",
   ],
-  chibiWake: [
+  // 睡觉（梦话和睡着时被摸头只能用 [sleepy]，别的情绪会把她吵醒）
+  fallAsleep: [
+    "[sleepy]呼啊……我先眯一会儿，有事叫我……",
+    "[sleepy]……只是闭目养神，才、才没有要睡……",
+    "[sleepy]你一直不理我……那我就先睡一会儿了哦……",
+  ],
+  goodnight: [
+    "[sleepy]……晚安。你也别熬太晚哦……",
+    "[sleepy]呼啊……我先睡了。明天见♪",
+    "[sleepy]……陪你到这里就好。晚安，做个好梦。",
+  ],
+  tuckIn: [
+    "[sleepy]……是你说要我睡的哦，那我就不客气了……",
+    "[sleepy]呼啊……那我睡了。不许偷看睡脸。",
+  ],
+  sleepTalk: [
+    "[sleepy]……唔……可爱的孩子……别跑……",
+    "[sleepy]……S 级……当然是我……呼……",
+    "[sleepy]……石榴茶……再来一杯……",
+    "[sleepy]……嗯……就在这里……别走……",
+    "[sleepy]……下一幅画……模特就是你了……",
+  ],
+  sleepPat: [
+    "[sleepy]……嗯……再、再摸一下……",
+    "[sleepy]……呼……好舒服……",
+    "[sleepy]……唔……是你吗……",
+  ],
+  wake: [
     "[surprise]呀……！我、我才没有睡着！",
     "[shy]……被看到睡脸了吗？忘掉，现在立刻。",
     "[pout]好不容易梦到可爱的孩子了……你得赔我。",
+    "[trouble]……嗯？天亮了？……啊，是你啊。",
   ],
-  chibiWakeSelf: [
-    "[sleepy]……嗯？我睡了多久？",
-    "[smile]睡饱了♪ 好，继续巡逻。",
+  wakeNight: [
+    "[gentle]……嗯……你还没睡吗？",
+    "[trouble]呼啊……这么晚了还叫我……是睡不着吗？那我陪你一会儿。",
+    "[pout]……正睡得香呢。你也快去睡，听到没有？",
+  ],
+  wakeMorning: [
+    "[smile]……早上好。睡得很舒服哦，你呢？",
+    "[happy]呼啊……早安♪ 一睁眼就看到你，今天运气不错呢。",
+  ],
+  wakeSelf: [
+    "[gentle]……嗯？我睡了多久？",
+    "[smile]睡饱了♪ 好，继续。",
+    "[smug]呼……小睡一下果然神清气爽。刚才没有偷看我的睡脸吧？",
   ],
   job: ["[smile]还是这个高度比较好，能好好看着你的脸。"],
   noKey: [
@@ -133,6 +171,6 @@ export const isNight = (d = new Date()) => d.getHours() >= 23 || d.getHours() < 
 
 export const CHIBI_ACTION_NAMES = {
   walk: "在桌面上小跑", dash: "冲刺", hop: "蹦蹦跳跳", dance: "跳舞庆祝", sit: "坐着休息",
-  sleep: "打瞌睡", look: "东张西望", talk: "自言自语", fall: "从半空落地",
+  sleep: "在小床上睡觉", wake: "起床", doze: "打瞌睡", look: "东张西望", talk: "自言自语", fall: "从半空落地",
   victory: "摆胜利姿势", cheer: "欢呼", pose: "摆姿势", spin: "转圈", jump: "跳", hurt: "被吓了一跳", faint: "倒下",
 };

@@ -4,7 +4,7 @@ const path = require("node:path");
 const { app, safeStorage } = require("electron");
 const LAYOUT = require("../shared/layout.json");
 
-const SETTINGS_VERSION = 3;
+const SETTINGS_VERSION = 4;
 
 const DEFAULTS = {
   // 外观
@@ -17,8 +17,10 @@ const DEFAULTS = {
   chibiAuto: true,        // 长时间没互动时自己活动
   chibiIdleSeconds: 60,   // 多久没互动后开始（0 = 一直活动）
   chibiActivity: 2,       // 活跃程度 1 安静 / 2 普通 / 3 活泼 / 4 超活泼
-  chibiActions: { walk: true, dash: true, hop: true, dance: true, sit: true, sleep: true, look: true, talk: true },
+  chibiActions: { walk: true, dash: true, hop: true, dance: true, sit: true, look: true, talk: true },
   chibiFall: true,        // 放到半空时掉到屏幕底部（关掉就停在放下的位置）
+  // 睡觉
+  sleepMinutes: 10,       // 多久没理她会犯困睡着（分钟，0 = 不会自己睡；晚上减半）
   // 对话
   userName: "主人",
   chatAutoClose: 30,      // 对话框多久没对话自动收起（秒，0 = 不自动收起）
@@ -40,10 +42,13 @@ const DEFAULTS = {
 
 const clampScale = (v) => Math.min(LAYOUT.scaleMax, Math.max(LAYOUT.scaleMin, Number(v) || 1));
 
-// 旧版设置迁移：v1 的接口字段和大小基准不同；v2 的 Q 版只有「自由走动」开关
+// 旧版设置迁移：v1 的接口字段和大小基准不同；v2 的 Q 版只有「自由走动」开关；
+// v3 的「打瞌睡」是 Q 版自主活动里的一项，关掉了的话就不让她自己睡
 function migrate(saved) {
   if (saved.version === SETTINGS_VERSION) return saved;
   const out = { ...saved };
+  if (saved.chibiActions?.sleep === false) out.sleepMinutes = 0;
+  if (saved.version === 3) return out;
   if (saved.walk === false) out.chibiAuto = false;
   if (saved.version === 2) return out;
   if (saved.provider === "openai") {
