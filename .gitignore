@@ -4,10 +4,6 @@ node_modules/
 # 打包产物
 dist/
 
-# 自己的角色卡不提交，只保留模板
-assets/card/*.json
-!assets/card/template.json
-
 # 本机配置
 .claude/
 .DS_Store
